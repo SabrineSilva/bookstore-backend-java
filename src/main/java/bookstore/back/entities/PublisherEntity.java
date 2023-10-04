@@ -16,9 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name="publishers")
 public class PublisherEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(name="name", unique = true, nullable = false)

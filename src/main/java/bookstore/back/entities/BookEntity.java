@@ -16,9 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "books")
 public class BookEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(name="name", nullable = false)
@@ -33,17 +34,14 @@ public class BookEntity {
     @Column(name="amount", nullable = false)
     private Integer totalQuantity;
 
-
     @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
-
 
     @Column(name="availableQuantity")
     private Integer availableQuantity;
 
     @Column(name="totalRented")
-    private Integer totalRented;
-
+    private Integer totalRented = 0;
 
     @OneToMany(mappedBy = "publisher")
     private List<BookEntity> books;

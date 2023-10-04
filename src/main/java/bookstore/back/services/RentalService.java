@@ -1,14 +1,22 @@
 package bookstore.back.services;
 
 import bookstore.back.io.rental.RentalCreateRequest;
+import bookstore.back.io.rental.RentalDevolution;
 import bookstore.back.io.rental.RentalResponseRequest;
+import bookstore.back.io.rental.RentalUpdateRequest;
 
 import java.util.List;
 
 public interface RentalService {
     void create(RentalCreateRequest request);
 
+    void update(RentalUpdateRequest request);
+
+    void returnBook(RentalDevolution request);
+
     List<RentalResponseRequest> getAll();
 
-    void delete(Long id);
+    List<RentalResponseRequest> getReturned();
+
+    List<RentalResponseRequest> getPending();
 }

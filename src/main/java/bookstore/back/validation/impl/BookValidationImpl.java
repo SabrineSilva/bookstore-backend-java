@@ -37,9 +37,11 @@ public class BookValidationImpl implements BookValidation {
         validationSameData(book);
     }
 
+
     @Override
     public void validateUpdate(BookEntity book) {
         validationName(book.getName());
+
         validationAuthor(book.getAuthor());
         validationLaunchDate(book.getLaunchDate());
         validationAmountUpdate(book.getTotalQuantity());
@@ -109,7 +111,6 @@ public class BookValidationImpl implements BookValidation {
         if (amount < 1) {
             throw new BusinessException("Para inserir um novo livro você deve ter pelo menos 1 exemplar.");
         }
-
     }
 
     private void validationAmountUpdate(Integer amount){

@@ -16,21 +16,22 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(name="rentals")
 public class RentalEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "rentalDate", nullable = false)
+    @Column(name = "rentalDate")
     private LocalDate rentalDate;
 
-    @Column(name = "dueDate", nullable = false)
+    @Column(name = "deadLine", nullable = false)
     private LocalDate deadLine;
 
     @Column(name = "returnDate")
     private LocalDate returnDate;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
 

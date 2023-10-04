@@ -12,7 +12,7 @@ public class RentalResponseRequest {
     private String bookName;
     private String userName;
     private LocalDate rentalDate;
-    private LocalDate dueDate;
+    private LocalDate deadLine;
     private LocalDate returnDate;
     private Status status;
 
