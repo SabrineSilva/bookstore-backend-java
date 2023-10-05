@@ -1,5 +1,6 @@
 package bookstore.back.validation.impl;
 
+import bookstore.back.entities.BookEntity;
 import bookstore.back.entities.RentalEntity;
 import bookstore.back.exception.BusinessException;
 import bookstore.back.repositories.RentalRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class RentalValidationImpl implements RentalValidation {
@@ -19,14 +21,30 @@ public class RentalValidationImpl implements RentalValidation {
     public void validate(RentalEntity rental) {
         validationDeadLine(rental.getDeadLine());
         validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId());
+        validationBook(rental.getBook());
+    }
 
+    private void validationBook(BookEntity entity) {
+        List<RentalEntity> currentRentals = rentalRepository.findAllByBookIdAndReturnDateIsNull(entity.getId());
+        int totalRentedNow = currentRentals.size();
+        entity.setAvailableQuantity(entity.getTotalQuantity() - totalRentedNow);
+        Integer availableQuantity = entity.getAvailableQuantity();
+
+        if (availableQuantity < 1){
+
+            throw new BusinessException("O livro não possui exemplares disponíveis!");
+        }
     }
 
     @Override
     public void validateUpdate(RentalEntity rental) {
         validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId());
         validationDeadLineUpdate(rental.getRentalDate(), rental.getDeadLine());
+
     }
+
+
+
 
     private void validationDeadLineUpdate(LocalDate rentalDate, LocalDate deadLine) {
         LocalDate today = LocalDate.now();

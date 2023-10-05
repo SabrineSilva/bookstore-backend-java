@@ -41,7 +41,7 @@ public class BookEntity {
     private Integer availableQuantity;
 
     @Column(name="totalRented")
-    private Integer totalRented = 0;
+    private Integer totalRented;
 
     @OneToMany(mappedBy = "publisher")
     private List<BookEntity> books;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,15 +42,14 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public void create(RentalCreateRequest request) {
         RentalEntity rental = new RentalEntity();
-        BookEntity book = bookService.findById(request.getBookId());
+        BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new BusinessException("Não foi possivel encontrar o livro."));
         Integer totalRented = book.getTotalRented();
-        Integer availableQuantity = book.getAvailableQuantity();
-
         rental.setBook(book);
         rental.setUser(userService.findById(request.getUserId()));
         rental.setDeadLine(request.getDeadLine());
         rental.setRentalDate(LocalDate.now());
         rentalValidation.validate(rental);
+        rental.getBook().setAvailableQuantity(book.getAvailableQuantity());
         book.setTotalRented(totalRented + 1);
         rental.setStatus(getStatus(rental.getDeadLine(), rental.getReturnDate()));
         bookRepository.save(book);

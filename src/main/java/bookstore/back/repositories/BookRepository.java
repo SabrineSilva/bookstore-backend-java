@@ -13,9 +13,6 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
-    @Query("SELECT COUNT(r) FROM RentalEntity r WHERE r.book = :book")
-    Long countRentalsByBook(@Param("book") BookEntity book);
-
     List<Optional<BookEntity>> findByPublisherId(Long id);
 
     Optional <BookEntity> findByIdAndIsDeletedFalse(Long id);
