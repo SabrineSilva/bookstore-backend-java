@@ -1,6 +1,7 @@
 package bookstore.back.open_api;
 
 import bookstore.back.io.publisher.PublisherCreateRequest;
+import bookstore.back.io.publisher.PublisherDetailRequest;
 import bookstore.back.io.publisher.PublisherResponseRequest;
 import bookstore.back.io.publisher.PublisherUpdateRequest;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,9 @@ public interface PublisherControllerOpenApi {
     })
     @PutMapping
       void update(@RequestBody PublisherUpdateRequest request);
+
+    @GetMapping("/{id}")
+    ResponseEntity<PublisherDetailRequest> findById(@PathVariable Long id);
 
     @ApiOperation(value = "List all the publishers")
     @ApiResponses(value = {

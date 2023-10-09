@@ -18,7 +18,7 @@ public class RentalValidationImpl implements RentalValidation {
     private RentalRepository rentalRepository;
 
     @Override
-    public void validate(RentalEntity rental) {
+    public void validateForCreate(RentalEntity rental) {
         validationDeadLine(rental.getDeadLine());
         validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId());
         validationBook(rental.getBook());

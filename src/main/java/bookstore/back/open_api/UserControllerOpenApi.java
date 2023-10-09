@@ -1,6 +1,7 @@
 package bookstore.back.open_api;
 
 import bookstore.back.io.user.UserCreateRequest;
+import bookstore.back.io.user.UserDetailRequest;
 import bookstore.back.io.user.UserResponseRequest;
 import bookstore.back.io.user.UserUpdateRequest;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,9 @@ public interface UserControllerOpenApi {
     })
     @PutMapping
     void update(@RequestBody UserUpdateRequest request);
+
+    @GetMapping("/{id}")
+    ResponseEntity<UserDetailRequest> findById(@PathVariable Long id);
 
     @ApiOperation(value = "List all the users")
     @ApiResponses(value = {

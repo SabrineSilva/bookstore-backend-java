@@ -1,23 +1,27 @@
 package bookstore.back.services.impl;
 
 import bookstore.back.entities.UserEntity;
-import bookstore.back.exception.BusinessException;
+import bookstore.back.exception.NotFoundException;
 import bookstore.back.io.user.UserCreateRequest;
 import bookstore.back.io.user.UserMapper;
 import bookstore.back.io.user.UserResponseRequest;
 import bookstore.back.io.user.UserUpdateRequest;
+import bookstore.back.repositories.RentalRepository;
 import bookstore.back.repositories.UserRepository;
 import bookstore.back.services.UserService;
 import bookstore.back.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private RentalRepository rentalRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -36,19 +40,21 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(request.getEmail());
         entity.setAddress(request.getAddress().trim());
         entity.setNumberOfRentals(0);
-        userValidation.validate(entity);
+        userValidation.validateForCreate(entity);
         userRepository.save(entity);
     }
 
     @Override
-    public UserEntity findById(Long id){
+    public UserEntity findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Não foi possível encontrar o usuário."));
+                .orElseThrow(() -> new NotFoundException("Usuário", id));
     }
 
     @Override
     public List<UserResponseRequest> getAll() {
-        return userRepository.findAll().stream().map(userMapper::toUserResponseRequest).collect(Collectors.toList());
+        List<UserResponseRequest> usersWithNumberOfRentals = getUsersWithNumberOfRentals();
+
+        return usersWithNumberOfRentals;
     }
 
     @Override
@@ -67,6 +73,30 @@ public class UserServiceImpl implements UserService {
         UserEntity entity = findById(id);
         userValidation.validateForDelete(id);
         userRepository.delete(entity);
+    }
+
+    public List<UserResponseRequest> getUsersWithNumberOfRentals() {
+        List<UserEntity> users = userRepository.findAll();
+        List<UserResponseRequest> usersWithNumberOfRentals = new ArrayList<>();
+
+        for (UserEntity user : users) {
+            Integer numberOfRentals = rentalRepository.findAllByUserIdAndReturnDateIsNull(user.getId()).size();
+            UserResponseRequest response = getUserResponseRequest(user, numberOfRentals);
+            usersWithNumberOfRentals.add(response);
+        }
+        return usersWithNumberOfRentals;
+    }
+
+    private static UserResponseRequest getUserResponseRequest(UserEntity user, Integer numberOfRentals) {
+        UserResponseRequest response = new UserResponseRequest();
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setCity(user.getCity());
+        response.setEmail(user.getEmail());
+        response.setAddress(user.getAddress());
+        response.setNumberOfRentals(numberOfRentals);
+        return response;
+
     }
 
 }

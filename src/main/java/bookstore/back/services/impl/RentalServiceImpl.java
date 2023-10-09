@@ -2,8 +2,8 @@ package bookstore.back.services.impl;
 
 import bookstore.back.entities.BookEntity;
 import bookstore.back.entities.RentalEntity;
-import bookstore.back.entities.UserEntity;
 import bookstore.back.exception.BusinessException;
+import bookstore.back.exception.NotFoundException;
 import bookstore.back.io.rental.*;
 import bookstore.back.repositories.BookRepository;
 import bookstore.back.repositories.RentalRepository;
@@ -46,18 +46,16 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public void create(RentalCreateRequest request) {
         RentalEntity rental = new RentalEntity();
-        BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new BusinessException("Não foi possivel encontrar o livro."));
-        UserEntity user = userRepository.findById(request.getUserId()).orElseThrow(() -> new BusinessException("Não foi possível encontrar o usuário."));
+        BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new NotFoundException("Livro", request.getBookId()));
         Integer totalRented = book.getTotalTimesRented();
-        Integer numberOfRentals = user.getNumberOfRentals();
+
         rental.setBook(book);
         rental.setUser(userService.findById(request.getUserId()));
         rental.setDeadLine(request.getDeadLine());
         rental.setRentalDate(LocalDate.now());
-        rentalValidation.validate(rental);
+        rentalValidation.validateForCreate(rental);
         rental.getBook().setAvailableQuantity(book.getAvailableQuantity());
         book.setTotalTimesRented(totalRented + 1);
-        user.setNumberOfRentals(numberOfRentals + 1);
         rental.setStatus(getStatus(rental.getDeadLine(), rental.getReturnDate()));
         bookRepository.save(book);
         rentalRepository.save(rental);
@@ -100,13 +98,14 @@ public class RentalServiceImpl implements RentalService {
         return rentalRepository.findAllByReturnDateIsNull().stream().map(rentalMapper::toRentalResponseRequest).collect(Collectors.toList());
     }
 
-    private RentalEntity findById(Long id) {
+    @Override
+    public RentalEntity findById(Long id) {
         return rentalRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Não foi possível encontrar o aluguel."));
+                .orElseThrow(() -> new NotFoundException("Aluguel", id));
     }
 
     private RentalEntity findByIdAndReturnDateIsNull(Long id) {
-        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new BusinessException("Não foi possível encontrar o aluguel. Lembre-se que você só pode devolver livros não devolvidos"));
+        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new NotFoundException("Aluguel", id));
     }
 
 

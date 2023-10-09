@@ -1,9 +1,6 @@
 package bookstore.back.controllers;
 
-import bookstore.back.io.rental.RentalCreateRequest;
-import bookstore.back.io.rental.RentalDevolution;
-import bookstore.back.io.rental.RentalResponseRequest;
-import bookstore.back.io.rental.RentalUpdateRequest;
+import bookstore.back.io.rental.*;
 import bookstore.back.open_api.RentalControllerOpenApi;
 import bookstore.back.services.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +17,9 @@ public class RentalController implements RentalControllerOpenApi {
     @Autowired
     private RentalService rentalService;
 
+    @Autowired
+    private RentalMapper rentalMapper;
+
     @Override
     @PostMapping
     public void create(@RequestBody RentalCreateRequest request) {
@@ -34,6 +34,12 @@ public class RentalController implements RentalControllerOpenApi {
     }
 
     @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<RentalDetailRequest> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(rentalMapper.toRentalDetailRequest(rentalService.findById(id)), HttpStatus.OK);
+    }
+
+    @Override
     @PutMapping("/{id}")
     public void returnBook(RentalDevolution request) {
         rentalService.returnBook(request);
@@ -42,19 +48,19 @@ public class RentalController implements RentalControllerOpenApi {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<RentalResponseRequest>> getAll(){
+    public ResponseEntity<List<RentalResponseRequest>> getAll() {
         return new ResponseEntity<>(rentalService.getAll(), HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/returned")
-    public ResponseEntity<List<RentalResponseRequest>> getReturned(){
+    public ResponseEntity<List<RentalResponseRequest>> getReturned() {
         return new ResponseEntity<>(rentalService.getReturned(), HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/pending")
-    public ResponseEntity<List<RentalResponseRequest>> getPending(){
+    public ResponseEntity<List<RentalResponseRequest>> getPending() {
         return new ResponseEntity<>(rentalService.getPending(), HttpStatus.OK);
     }
 }

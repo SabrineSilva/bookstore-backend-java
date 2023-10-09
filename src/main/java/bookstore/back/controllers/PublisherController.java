@@ -1,8 +1,6 @@
 package bookstore.back.controllers;
 
-import bookstore.back.io.publisher.PublisherCreateRequest;
-import bookstore.back.io.publisher.PublisherResponseRequest;
-import bookstore.back.io.publisher.PublisherUpdateRequest;
+import bookstore.back.io.publisher.*;
 import bookstore.back.open_api.PublisherControllerOpenApi;
 import bookstore.back.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,9 @@ public class PublisherController implements PublisherControllerOpenApi {
     @Autowired
     private PublisherService publisherService;
 
+    @Autowired
+    private PublisherMapper publisherMapper;
+
     @Override
     @PostMapping
     public void create(@RequestBody PublisherCreateRequest request){
@@ -30,6 +31,12 @@ public class PublisherController implements PublisherControllerOpenApi {
     @PutMapping
     public void update(@RequestBody PublisherUpdateRequest request){
         publisherService.update(request);
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<PublisherDetailRequest> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(publisherMapper.toPublisherDetailRequest(publisherService.findById(id)), HttpStatus.OK);
     }
 
     @Override

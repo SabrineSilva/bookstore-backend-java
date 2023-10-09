@@ -29,7 +29,7 @@ public class BookValidationImpl implements BookValidation {
 
 
     @Override
-    public void validate(BookEntity book) {
+    public void validateForCreate(BookEntity book) {
 
         validationName(book.getName());
         validationAuthor(book.getAuthor());
@@ -138,7 +138,7 @@ public class BookValidationImpl implements BookValidation {
         List<Optional<RentalEntity>> rentals = rentalRepository.findByBookId(id);
 
         if (!rentals.isEmpty()) {
-            throw new BusinessException("Não é possível deletar, pois, há um aluguel associado à esse livro.");
+            throw new BusinessException("Não é possível deletar, pois, há pelo menos um aluguel associado à esse livro.");
         }
     }
 

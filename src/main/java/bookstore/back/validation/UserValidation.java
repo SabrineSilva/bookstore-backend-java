@@ -4,7 +4,7 @@ import bookstore.back.entities.UserEntity;
 
 public interface UserValidation {
 
-    void validate(UserEntity user);
+    void validateForCreate(UserEntity user);
 
     void validateUpdate(UserEntity user);
 

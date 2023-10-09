@@ -22,7 +22,7 @@ public class PublisherValidationImpl implements PublisherValidation {
     private BookRepository bookRepository;
 
     @Override
-    public void validate(PublisherEntity publisher) {
+    public void validateForCreate(PublisherEntity publisher) {
         validationName(publisher.getName());
         validationCity(publisher.getCity());
     }

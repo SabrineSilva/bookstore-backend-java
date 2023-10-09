@@ -1,17 +1,11 @@
 package bookstore.back.open_api;
 
-import bookstore.back.io.rental.RentalCreateRequest;
-import bookstore.back.io.rental.RentalDevolution;
-import bookstore.back.io.rental.RentalResponseRequest;
-import bookstore.back.io.rental.RentalUpdateRequest;
+import bookstore.back.io.rental.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +24,9 @@ public interface RentalControllerOpenApi {
     })
     @PutMapping
     void update(@RequestBody RentalUpdateRequest request);
+
+    @GetMapping("/{id}")
+    ResponseEntity<RentalDetailRequest> findById(@PathVariable Long id);
 
     @ApiOperation(value = "Return a rental")
     @ApiResponses(value = {

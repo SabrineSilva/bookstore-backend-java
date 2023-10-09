@@ -3,7 +3,7 @@ package bookstore.back.validation;
 import bookstore.back.entities.BookEntity;
 
 public interface BookValidation {
-    void validate(BookEntity book);
+    void validateForCreate(BookEntity book);
 
     void validateUpdate(BookEntity entity);
 

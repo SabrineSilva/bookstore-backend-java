@@ -1,6 +1,7 @@
 package bookstore.back.open_api;
 
 import bookstore.back.io.book.BookCreateRequest;
+import bookstore.back.io.book.BookDetailRequest;
 import bookstore.back.io.book.BookResponseRequest;
 import bookstore.back.io.book.BookUpdateRequest;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,9 @@ public interface BookControllerOpenApi {
     })
     @PutMapping
     void update(@RequestBody BookUpdateRequest request);
+
+    @GetMapping("/{id}")
+    ResponseEntity<BookDetailRequest> findById(@PathVariable Long id);
 
     @ApiOperation(value = "List all the books")
     @ApiResponses(value = {

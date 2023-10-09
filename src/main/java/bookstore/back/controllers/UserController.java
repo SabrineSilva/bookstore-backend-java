@@ -1,9 +1,7 @@
 package bookstore.back.controllers;
 
 
-import bookstore.back.io.user.UserCreateRequest;
-import bookstore.back.io.user.UserResponseRequest;
-import bookstore.back.io.user.UserUpdateRequest;
+import bookstore.back.io.user.*;
 import bookstore.back.open_api.UserControllerOpenApi;
 import bookstore.back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,9 @@ public class UserController implements UserControllerOpenApi {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     @PostMapping
     public void create(@RequestBody UserCreateRequest request) {
@@ -31,6 +32,12 @@ public class UserController implements UserControllerOpenApi {
     @PutMapping
     public void update(@RequestBody UserUpdateRequest request) {
         userService.update(request);
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDetailRequest> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(userMapper.toUserDetailRequest(userService.findById(id)), HttpStatus.OK);
     }
 
     @Override

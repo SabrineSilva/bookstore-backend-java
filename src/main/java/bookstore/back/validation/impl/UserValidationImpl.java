@@ -21,7 +21,7 @@ public class UserValidationImpl implements UserValidation {
     private UserRepository userRepository;
 
     @Override
-    public void validate(UserEntity user){
+    public void validateForCreate(UserEntity user){
         validationName(user.getName());
         validationCity(user.getCity());
         validationEmail(user.getEmail());

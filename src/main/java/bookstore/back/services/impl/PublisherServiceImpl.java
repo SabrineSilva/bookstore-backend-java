@@ -1,9 +1,7 @@
 package bookstore.back.services.impl;
 
-import bookstore.back.io.publisher.PublisherCreateRequest;
-import bookstore.back.io.publisher.PublisherMapper;
-import bookstore.back.io.publisher.PublisherResponseRequest;
-import bookstore.back.io.publisher.PublisherUpdateRequest;
+import bookstore.back.exception.NotFoundException;
+import bookstore.back.io.publisher.*;
 import bookstore.back.entities.PublisherEntity;
 import bookstore.back.exception.BusinessException;
 import bookstore.back.repositories.PublisherRepository;
@@ -28,11 +26,11 @@ public class PublisherServiceImpl implements PublisherService {
     private PublisherMapper publisherMapper;
 
     @Override
-    public void create(PublisherCreateRequest request){
+    public void create(PublisherCreateRequest request) {
         PublisherEntity entity = new PublisherEntity();
         entity.setName(request.getName().trim());
         entity.setCity(request.getCity().trim());
-        publisherValidation.validate(entity);
+        publisherValidation.validateForCreate(entity);
         publisherRepository.save(entity);
     }
 
@@ -46,16 +44,17 @@ public class PublisherServiceImpl implements PublisherService {
         return publisherRepository.findAllByIsDeletedTrue().stream().map(publisherMapper::toPublisherResponseRequest).collect(Collectors.toList());
     }
 
+
     @Override
-    public PublisherEntity findById(Long id){
-     return publisherRepository.findByIdAndIsDeletedFalse(id)
-             .orElseThrow(() -> new BusinessException("Não foi possível encontrar a editora."));
+    public PublisherEntity findById(Long id) {
+        return publisherRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException("Editora", id));
     }
 
     @Override
-    public PublisherEntity findByDeleteId(Long id){
+    public PublisherEntity findByDeleteId(Long id) {
         return publisherRepository.findByIdAndIsDeletedTrue(id)
-                .orElseThrow(() -> new BusinessException("Não foi possível encontrar a editora apagada."));
+                .orElseThrow(() -> new NotFoundException("Editora", id));
     }
 
     @Override

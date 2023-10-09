@@ -1,5 +1,6 @@
 package bookstore.back.services;
 
+import bookstore.back.entities.RentalEntity;
 import bookstore.back.io.rental.RentalCreateRequest;
 import bookstore.back.io.rental.RentalDevolution;
 import bookstore.back.io.rental.RentalResponseRequest;
@@ -19,4 +20,6 @@ public interface RentalService {
     List<RentalResponseRequest> getReturned();
 
     List<RentalResponseRequest> getPending();
+
+    RentalEntity findById(Long id);
 }

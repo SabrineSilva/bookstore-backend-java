@@ -17,4 +17,10 @@ public class ExceptionHandle extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(error, errorResponse, new HttpHeaders(),HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> notFoundHandleException(NotFoundException error, WebRequest request){
+        ErrorException errorResponse = new ErrorException(HttpStatus.NOT_FOUND.value(), error.getMessage());
+        return handleExceptionInternal(error, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
 }
