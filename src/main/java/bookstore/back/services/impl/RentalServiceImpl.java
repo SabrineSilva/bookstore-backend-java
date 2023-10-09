@@ -2,10 +2,12 @@ package bookstore.back.services.impl;
 
 import bookstore.back.entities.BookEntity;
 import bookstore.back.entities.RentalEntity;
+import bookstore.back.entities.UserEntity;
 import bookstore.back.exception.BusinessException;
 import bookstore.back.io.rental.*;
 import bookstore.back.repositories.BookRepository;
 import bookstore.back.repositories.RentalRepository;
+import bookstore.back.repositories.UserRepository;
 import bookstore.back.services.BookService;
 import bookstore.back.services.RentalService;
 import bookstore.back.services.UserService;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +32,9 @@ public class RentalServiceImpl implements RentalService {
     private BookRepository bookRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private RentalMapper rentalMapper;
 
     @Autowired
@@ -43,14 +47,17 @@ public class RentalServiceImpl implements RentalService {
     public void create(RentalCreateRequest request) {
         RentalEntity rental = new RentalEntity();
         BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new BusinessException("Não foi possivel encontrar o livro."));
-        Integer totalRented = book.getTotalRented();
+        UserEntity user = userRepository.findById(request.getUserId()).orElseThrow(() -> new BusinessException("Não foi possível encontrar o usuário."));
+        Integer totalRented = book.getTotalTimesRented();
+        Integer numberOfRentals = user.getNumberOfRentals();
         rental.setBook(book);
         rental.setUser(userService.findById(request.getUserId()));
         rental.setDeadLine(request.getDeadLine());
         rental.setRentalDate(LocalDate.now());
         rentalValidation.validate(rental);
         rental.getBook().setAvailableQuantity(book.getAvailableQuantity());
-        book.setTotalRented(totalRented + 1);
+        book.setTotalTimesRented(totalRented + 1);
+        user.setNumberOfRentals(numberOfRentals + 1);
         rental.setStatus(getStatus(rental.getDeadLine(), rental.getReturnDate()));
         bookRepository.save(book);
         rentalRepository.save(rental);
@@ -69,7 +76,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public void returnBook(RentalDevolution request) {
-        RentalEntity entity = findById(request.getId());
+        RentalEntity entity = findByIdAndReturnDateIsNull(request.getId());
         LocalDate today = LocalDate.now();
 
         entity.setReturnDate(today);
@@ -98,11 +105,10 @@ public class RentalServiceImpl implements RentalService {
                 .orElseThrow(() -> new BusinessException("Não foi possível encontrar o aluguel."));
     }
 
-    private RentalEntity findReturnedRentals(Long id) {
-        return rentalRepository.findByIdAndReturnDateIsNotNull(id)
-                .orElseThrow(() -> new BusinessException("Não foi possível encontrar o aluguel. Certifique-se que você está tentando apagar um aluguel que já foi devolvido, ou verifique se está passando os padrões corretamente."));
-
+    private RentalEntity findByIdAndReturnDateIsNull(Long id) {
+        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new BusinessException("Não foi possível encontrar o aluguel. Lembre-se que você só pode devolver livros não devolvidos"));
     }
+
 
     private Status getStatus(LocalDate deadLine, LocalDate returnDate) {
         LocalDate today = LocalDate.now();

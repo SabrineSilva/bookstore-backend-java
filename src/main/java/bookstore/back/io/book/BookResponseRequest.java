@@ -12,6 +12,6 @@ public class BookResponseRequest {
     private Integer launchDate;
     private Integer totalQuantity;
     private Integer availableQuantity;
-    private Integer totalRented;
+    private Integer totalTimesRented;
     private String publisherName;
 }

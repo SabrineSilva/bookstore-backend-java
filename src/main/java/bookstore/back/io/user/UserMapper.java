@@ -12,6 +12,7 @@ public class UserMapper {
         response.setCity(user.getCity());
         response.setEmail(user.getEmail());
         response.setAddress(user.getAddress());
+        response.setNumberOfRentals(user.getNumberOfRentals());
         return response;
     }
 

@@ -19,7 +19,7 @@ public interface RentalRepository extends JpaRepository<RentalEntity, Long> {
 
     List<RentalEntity> findAllByReturnDateIsNull();
 
-    Optional<RentalEntity> findByIdAndReturnDateIsNotNull(Long id);
+    Optional<RentalEntity> findByIdAndReturnDateIsNull(Long id);
 
     boolean existsByUserIdAndBookIdAndReturnDateIsNull(Long userId, Long bookId);
 }

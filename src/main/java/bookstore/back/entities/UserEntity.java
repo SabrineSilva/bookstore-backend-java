@@ -13,12 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="users")
-public class UserEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+public class UserEntity extends BaseEntity {
 
     @Column(name="name", nullable = false)
     private String name;
@@ -31,4 +26,7 @@ public class UserEntity {
 
     @Column(name="address", nullable = false)
     private String address;
+
+    @Column(name="numberOfRentals")
+    private Integer numberOfRentals;
 }

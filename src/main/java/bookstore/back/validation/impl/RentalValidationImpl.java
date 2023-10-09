@@ -30,6 +30,7 @@ public class RentalValidationImpl implements RentalValidation {
         entity.setAvailableQuantity(entity.getTotalQuantity() - totalRentedNow);
         Integer availableQuantity = entity.getAvailableQuantity();
 
+
         if (availableQuantity < 1){
 
             throw new BusinessException("O livro não possui exemplares disponíveis!");

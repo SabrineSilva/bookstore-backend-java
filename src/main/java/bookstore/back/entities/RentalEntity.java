@@ -15,12 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="rentals")
-public class RentalEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+public class RentalEntity extends BaseEntity {
 
     @Column(name = "rentalDate")
     private LocalDate rentalDate;

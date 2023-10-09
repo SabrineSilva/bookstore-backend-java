@@ -1,6 +1,7 @@
 package bookstore.back.validation.impl;
 
 import bookstore.back.entities.BookEntity;
+import bookstore.back.entities.PublisherEntity;
 import bookstore.back.entities.RentalEntity;
 import bookstore.back.exception.BusinessException;
 import bookstore.back.repositories.BookRepository;
@@ -28,7 +29,7 @@ public class BookValidationImpl implements BookValidation {
 
 
     @Override
-    public void validate(BookEntity book){
+    public void validate(BookEntity book) {
 
         validationName(book.getName());
         validationAuthor(book.getAuthor());
@@ -41,19 +42,19 @@ public class BookValidationImpl implements BookValidation {
     @Override
     public void validateUpdate(BookEntity book) {
         validationName(book.getName());
-
         validationAuthor(book.getAuthor());
         validationLaunchDate(book.getLaunchDate());
-        validationAmountUpdate(book.getTotalQuantity());
+        validationTotalQuantityUpdate(book.getTotalQuantity(), book);
         validationSameDataUpdate(book);
     }
 
     private void validationSameData(BookEntity book) {
         String name = book.getName();
         String author = book.getAuthor();
+        Long publisher = book.getPublisher().getId();
 
-         if (!bookRepository.findByName(name).isEmpty() && !bookRepository.findByAuthor(author).isEmpty()) {
-            throw new BusinessException("Esse livro com o mesmo nome o mesmo autor já está cadastrado no sistema.");
+        if (!bookRepository.findByName(name).isEmpty() && !bookRepository.findByAuthor(author).isEmpty() && !bookRepository.findByPublisherId(publisher).isEmpty()) {
+            throw new BusinessException("Esse livro com o mesmo nome o mesmo autor já está cadastrado no sistema dentro dessa editora.");
         }
 
     }
@@ -61,10 +62,11 @@ public class BookValidationImpl implements BookValidation {
     private void validationSameDataUpdate(BookEntity book) {
         String name = book.getName();
         String author = book.getAuthor();
+        Long publisher = book.getPublisher().getId();
 
-        BookEntity existingBook = bookRepository.findBookByNameAndAuthor(name, author).orElse(null);
+        BookEntity existingBook = bookRepository.findBookByNameAndAuthorAndPublisherId(name, author, publisher).orElse(null);
         if (existingBook != null && !existingBook.getId().equals(book.getId())) {
-            throw new BusinessException("Esse livro com o mesmo nome o mesmo autor já está cadastrado no sistema.");
+            throw new BusinessException("Esse livro com o mesmo nome o mesmo autor já está cadastrado no sistema dentro dessa editora.");
         }
 
     }
@@ -97,13 +99,13 @@ public class BookValidationImpl implements BookValidation {
 
         int currentYear = LocalDate.now().getYear();
 
-        if ( launchDate < 1 || launchDate > currentYear) {
+        if (launchDate < 1 || launchDate > currentYear) {
             throw new BusinessException("O ano de lançamento deve ser um valor válido, antes ou igual ao ano atual");
         }
 
     }
 
-    private void validationAmount(Integer amount){
+    private void validationAmount(Integer amount) {
         if (amount == null) {
             throw new BusinessException("A quantidade não pode ser nula.");
         }
@@ -113,22 +115,29 @@ public class BookValidationImpl implements BookValidation {
         }
     }
 
-    private void validationAmountUpdate(Integer amount){
-        if (amount == null) {
+    private void validationTotalQuantityUpdate(Integer totalQuantity, BookEntity book) {
+        List<RentalEntity> currentRentals = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId());
+        int totalRentedNow = currentRentals.size();
+
+        if (totalQuantity == null) {
             throw new BusinessException("A quantidade não pode ser nula.");
         }
 
-        if (amount < 0) {
+        if (totalQuantity < 0) {
             throw new BusinessException("A quantidade deve ser um valor válido (Maior ou igual a 0)");
+        }
+
+        if (totalQuantity < totalRentedNow) {
+            throw new BusinessException("O livro tem " + totalRentedNow + " aluguéis ativos, portanto, a sua quantidade total é no mínimo "+ totalRentedNow);
         }
 
     }
 
-    private void validateRelationship(Long id){
+    private void validateRelationship(Long id) {
 
         List<Optional<RentalEntity>> rentals = rentalRepository.findByBookId(id);
 
-        if (!rentals.isEmpty()){
+        if (!rentals.isEmpty()) {
             throw new BusinessException("Não é possível deletar, pois, há um aluguel associado à esse livro.");
         }
     }

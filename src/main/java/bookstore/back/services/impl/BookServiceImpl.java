@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
         entity.setAuthor(request.getAuthor().trim());
         entity.setLaunchDate(request.getLaunchDate());
         entity.setTotalQuantity(request.getTotalQuantity());
-        entity.setTotalRented(0);
+        entity.setTotalTimesRented(0);
         entity.setAvailableQuantity(entity.getTotalQuantity());
         entity.setPublisher(publisherService.findById(request.getPublisherId()));
         bookValidation.validate(entity);
@@ -130,7 +130,7 @@ public class BookServiceImpl implements BookService {
             response.setAuthor(book.getAuthor());
             response.setLaunchDate(book.getLaunchDate());
             response.setTotalQuantity(book.getTotalQuantity());
-            response.setTotalRented(book.getTotalRented());
+            response.setTotalTimesRented(book.getTotalTimesRented());
             response.setPublisherName(book.getPublisher().getName());
             response.setAvailableQuantity(availableQuantity);
 

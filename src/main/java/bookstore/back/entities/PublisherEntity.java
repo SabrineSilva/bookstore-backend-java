@@ -15,12 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="publishers")
-public class PublisherEntity {
+public class PublisherEntity extends BaseEntity  {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
 
     @Column(name="name", unique = true, nullable = false)
     private String name;

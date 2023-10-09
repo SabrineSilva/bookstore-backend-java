@@ -15,12 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "books")
-public class BookEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+public class BookEntity extends BaseEntity {
 
     @Column(name="name", nullable = false)
     private String name;
@@ -31,7 +26,7 @@ public class BookEntity {
     @Column(name="launchDate", nullable = false)
     private Integer launchDate;
 
-    @Column(name="amount", nullable = false)
+    @Column(name="totalQuantity", nullable = false)
     private Integer totalQuantity;
 
     @Column(name="is_deleted", nullable = false)
@@ -40,8 +35,8 @@ public class BookEntity {
     @Column(name="availableQuantity")
     private Integer availableQuantity;
 
-    @Column(name="totalRented")
-    private Integer totalRented;
+    @Column(name="totalTimesRented")
+    private Integer totalTimesRented;
 
     @OneToMany(mappedBy = "publisher")
     private List<BookEntity> books;

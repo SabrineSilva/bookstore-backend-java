@@ -11,4 +11,5 @@ public class UserResponseRequest {
     private String city;
     private String email;
     private String address;
+    private Integer numberOfRentals;
 }

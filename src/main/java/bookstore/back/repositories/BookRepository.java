@@ -19,7 +19,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
     Optional <BookEntity> findByIdAndIsDeletedTrue(Long id);
 
-    Optional<BookEntity> findBookByNameAndAuthor(String name, String author);
+    Optional<BookEntity> findBookByNameAndAuthorAndPublisherId(String name, String author, Long publisherId);
 
     List<BookEntity> findAllByIsDeletedFalse();
 

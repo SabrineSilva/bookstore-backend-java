@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
         entity.setCity(request.getCity().trim());
         entity.setEmail(request.getEmail());
         entity.setAddress(request.getAddress().trim());
+        entity.setNumberOfRentals(0);
         userValidation.validate(entity);
         userRepository.save(entity);
     }

@@ -1,9 +1,6 @@
 package bookstore.back.io.book;
 
 import bookstore.back.entities.BookEntity;
-import bookstore.back.entities.RentalEntity;
-import bookstore.back.repositories.RentalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +14,7 @@ public class BookMapper {
         response.setLaunchDate(book.getLaunchDate());
         response.setTotalQuantity(book.getTotalQuantity());
         response.setAvailableQuantity(book.getAvailableQuantity());
-        response.setTotalRented(book.getTotalRented());
+        response.setTotalTimesRented(book.getTotalTimesRented());
         response.setPublisherName(book.getPublisher().getName());
         return response;
     }
