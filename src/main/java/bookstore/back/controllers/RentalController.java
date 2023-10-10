@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/rentals")
 @SuppressWarnings("unused")
 public class RentalController implements RentalControllerOpenApi {

@@ -48,7 +48,6 @@ public class RentalServiceImpl implements RentalService {
         RentalEntity rental = new RentalEntity();
         BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new NotFoundException("Livro", request.getBookId()));
         Integer totalRented = book.getTotalTimesRented();
-
         rental.setBook(book);
         rental.setUser(userService.findById(request.getUserId()));
         rental.setDeadLine(request.getDeadLine());
@@ -63,13 +62,15 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public void update(RentalUpdateRequest request) {
-        RentalEntity entity = findById(request.getId());
-        entity.setBook(bookService.findById(request.getBookId()));
-        entity.setUser(userService.findById(request.getUserId()));
-        entity.setDeadLine(request.getDeadLine());
-        rentalValidation.validateUpdate(entity);
-        entity.setStatus(getStatus(entity.getDeadLine(), entity.getReturnDate()));
-        rentalRepository.save(entity);
+        RentalEntity entity = findByIdAndReturnDateIsNull(request.getId());
+        if (entity.getStatus() == Status.PENDING_ON_TIME) {
+            entity.setDeadLine(request.getDeadLine());
+            rentalValidation.validateUpdate(entity);
+            entity.setStatus(getStatus(entity.getDeadLine(), entity.getReturnDate()));
+            rentalRepository.save(entity);
+        } else {
+            throw new BusinessException("Você só pode renovar aluguéis com status PENDING_ON_TIME (Pendente e no prazo).");
+        }
     }
 
     @Override

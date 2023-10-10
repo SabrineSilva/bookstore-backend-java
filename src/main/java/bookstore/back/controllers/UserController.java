@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 @SuppressWarnings("unused")
 public class UserController implements UserControllerOpenApi {
@@ -38,7 +39,7 @@ public class UserController implements UserControllerOpenApi {
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailRequest> findById(@PathVariable Long id) {
         return new ResponseEntity<>(userMapper.toUserDetailRequest(userService.findById(id)), HttpStatus.OK);
-    }
+    }git push
 
     @Override
     @GetMapping

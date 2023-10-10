@@ -10,6 +10,5 @@ import java.time.LocalDate;
 public class RentalUpdateRequest {
     private Long id;
     private LocalDate deadLine;
-    private Long bookId;
-    private Long userId;
+
 }

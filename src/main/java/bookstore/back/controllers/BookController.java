@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/books")
 @SuppressWarnings("unused")
 public class BookController implements BookControllerOpenApi {

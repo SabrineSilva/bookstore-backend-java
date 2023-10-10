@@ -30,7 +30,6 @@ public class RentalValidationImpl implements RentalValidation {
         entity.setAvailableQuantity(entity.getTotalQuantity() - totalRentedNow);
         Integer availableQuantity = entity.getAvailableQuantity();
 
-
         if (availableQuantity < 1){
 
             throw new BusinessException("O livro não possui exemplares disponíveis!");
@@ -39,12 +38,8 @@ public class RentalValidationImpl implements RentalValidation {
 
     @Override
     public void validateUpdate(RentalEntity rental) {
-        validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId());
         validationDeadLineUpdate(rental.getRentalDate(), rental.getDeadLine());
-
     }
-
-
 
 
     private void validationDeadLineUpdate(LocalDate rentalDate, LocalDate deadLine) {
@@ -54,8 +49,6 @@ public class RentalValidationImpl implements RentalValidation {
             throw new BusinessException("A data de previsão de devolução deve ser depois ou igual ao dia atual e depois da data que foi realizado o aluguel.");
         }
     }
-
-
 
     private void validationDeadLine(LocalDate deadLine) {
         if (deadLine == null) {

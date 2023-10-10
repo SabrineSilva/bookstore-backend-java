@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/publishers")
 @SuppressWarnings("unused")
 public class PublisherController implements PublisherControllerOpenApi {
