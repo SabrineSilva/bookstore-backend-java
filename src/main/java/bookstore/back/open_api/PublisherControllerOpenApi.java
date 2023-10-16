@@ -29,7 +29,7 @@ public interface PublisherControllerOpenApi {
       void update(@RequestBody PublisherUpdateRequest request);
 
     @GetMapping("/{id}")
-    ResponseEntity<PublisherDetailRequest> findById(@PathVariable Long id);
+    ResponseEntity<PublisherDetailRequest> findById(@PathVariable Integer id);
 
     @ApiOperation(value = "List all the publishers")
     @ApiResponses(value = {
@@ -50,12 +50,12 @@ public interface PublisherControllerOpenApi {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id);
+    void delete(@PathVariable Integer id);
 
     @ApiOperation(value = "Delete permanently the publisher")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @DeleteMapping("/deleted/{id}")
-    void deletePermanently(@PathVariable Long id);
+    void deletePermanently(@PathVariable Integer id);
 }

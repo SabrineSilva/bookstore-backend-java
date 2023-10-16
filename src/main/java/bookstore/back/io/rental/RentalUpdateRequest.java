@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class RentalUpdateRequest {
-    private Long id;
-    private LocalDate deadLine;
+    private Integer id;
+    private LocalDate deadline;
 
 }

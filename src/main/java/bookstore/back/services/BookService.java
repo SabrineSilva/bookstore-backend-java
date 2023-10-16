@@ -2,6 +2,7 @@ package bookstore.back.services;
 
 import bookstore.back.entities.BookEntity;
 import bookstore.back.io.book.BookCreateRequest;
+import bookstore.back.io.book.BookResponseDeletedRequest;
 import bookstore.back.io.book.BookResponseRequest;
 import bookstore.back.io.book.BookUpdateRequest;
 
@@ -15,15 +16,15 @@ public interface BookService {
 
     List<BookResponseRequest> getAll();
 
-    List<BookResponseRequest> getAllDeleted();
+    List<BookResponseDeletedRequest> getAllDeleted();
 
-    BookEntity findById(Long id);
+    BookEntity findById(Integer id);
 
-    BookEntity findByDeleteId(Long id);
+    BookEntity findByDeleteId(Integer id);
 
-    void delete(Long id);
+    void delete(Integer id);
 
-    void deletePermanently(Long id);
+    void deletePermanently(Integer id);
 
 
 }

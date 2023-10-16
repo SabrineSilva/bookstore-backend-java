@@ -19,7 +19,7 @@ public class RentalValidationImpl implements RentalValidation {
 
     @Override
     public void validateForCreate(RentalEntity rental) {
-        validationDeadLine(rental.getDeadLine());
+        validationDeadLine(rental.getDeadline());
         validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId());
         validationBook(rental.getBook());
     }
@@ -38,7 +38,7 @@ public class RentalValidationImpl implements RentalValidation {
 
     @Override
     public void validateUpdate(RentalEntity rental) {
-        validationDeadLineUpdate(rental.getRentalDate(), rental.getDeadLine());
+        validationDeadLineUpdate(rental.getRentalDate(), rental.getDeadline());
     }
 
 
@@ -62,7 +62,7 @@ public class RentalValidationImpl implements RentalValidation {
         }
     }
 
-    public void validateDuplicateRental(Long userId, Long bookId) {
+    public void validateDuplicateRental(Integer userId, Integer bookId) {
         if (rentalRepository.existsByUserIdAndBookIdAndReturnDateIsNull(userId, bookId)) {
             throw new BusinessException("O usuário já alugou este livro e ainda não o devolveu.");
         }

@@ -13,8 +13,8 @@ import bookstore.back.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,16 +45,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Usuário", id));
+    public UserEntity findById(Integer id) {
+        UserEntity user = userRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException("o usuário", id));
+
+        Integer numberOfRentals = rentalRepository.countByUserIdAndReturnDateIsNull(id);
+        user.setNumberOfRentals(numberOfRentals);
+
+        return user;
+    }
+
+
+    @Override
+    public UserEntity findByDeletedId(Integer id) {
+        return userRepository.findByIdAndIsDeletedTrue(id)
+                .orElseThrow(() -> new NotFoundException("o usuário deletado", id));
+
     }
 
     @Override
     public List<UserResponseRequest> getAll() {
-        List<UserResponseRequest> usersWithNumberOfRentals = getUsersWithNumberOfRentals();
+        return userRepository.findAllByIsDeletedFalse().stream().map(userMapper::toUserResponseRequest).collect(Collectors.toList());
+    }
 
-        return usersWithNumberOfRentals;
+    @Override
+    public List<UserResponseRequest> getAllDeleted() {
+        return userRepository.findAllByIsDeletedTrue().stream().map(userMapper::toUserResponseRequest).collect(Collectors.toList());
     }
 
     @Override
@@ -64,39 +80,24 @@ public class UserServiceImpl implements UserService {
         entity.setCity(request.getCity().trim());
         entity.setEmail(request.getEmail());
         entity.setAddress(request.getAddress().trim());
+
         userValidation.validateUpdate(entity);
         userRepository.save(entity);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         UserEntity entity = findById(id);
         userValidation.validateForDelete(id);
+        entity.setDeleted(true);
+        userRepository.save(entity);
+    }
+
+    @Override
+    public void permanentlyDelete(Integer id) {
+        UserEntity entity = findByDeletedId(id);
         userRepository.delete(entity);
     }
 
-    public List<UserResponseRequest> getUsersWithNumberOfRentals() {
-        List<UserEntity> users = userRepository.findAll();
-        List<UserResponseRequest> usersWithNumberOfRentals = new ArrayList<>();
-
-        for (UserEntity user : users) {
-            Integer numberOfRentals = rentalRepository.findAllByUserIdAndReturnDateIsNull(user.getId()).size();
-            UserResponseRequest response = getUserResponseRequest(user, numberOfRentals);
-            usersWithNumberOfRentals.add(response);
-        }
-        return usersWithNumberOfRentals;
-    }
-
-    private static UserResponseRequest getUserResponseRequest(UserEntity user, Integer numberOfRentals) {
-        UserResponseRequest response = new UserResponseRequest();
-        response.setId(user.getId());
-        response.setName(user.getName());
-        response.setCity(user.getCity());
-        response.setEmail(user.getEmail());
-        response.setAddress(user.getAddress());
-        response.setNumberOfRentals(numberOfRentals);
-        return response;
-
-    }
 
 }

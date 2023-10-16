@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PublisherUpdateRequest {
-    private Long id;
+    private Integer id;
     private String name;
     private String city;
 }

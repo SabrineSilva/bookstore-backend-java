@@ -6,10 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResponseRequest {
-    private Long id;
+    private Integer id;
     private String name;
     private String city;
     private String email;
     private String address;
-    private Integer numberOfRentals;
+
 }

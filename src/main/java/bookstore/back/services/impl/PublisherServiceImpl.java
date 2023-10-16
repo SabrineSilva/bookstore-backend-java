@@ -35,6 +35,12 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    public PublisherEntity findById(Integer id) {
+        return publisherRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException("a editora", id));
+    }
+
+    @Override
     public List<PublisherResponseRequest> getAll() {
         return publisherRepository.findAllByIsDeletedFalse().stream().map(publisherMapper::toPublisherResponseRequest).collect(Collectors.toList());
     }
@@ -45,16 +51,12 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
 
-    @Override
-    public PublisherEntity findById(Long id) {
-        return publisherRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new NotFoundException("Editora", id));
-    }
+
 
     @Override
-    public PublisherEntity findByDeleteId(Long id) {
+    public PublisherEntity findByDeleteId(Integer id) {
         return publisherRepository.findByIdAndIsDeletedTrue(id)
-                .orElseThrow(() -> new NotFoundException("Editora", id));
+                .orElseThrow(() -> new NotFoundException("a editora", id));
     }
 
     @Override
@@ -67,7 +69,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         PublisherEntity entity = findById(id);
         publisherValidation.validateForDelete(id);
         entity.setDeleted(true);
@@ -75,7 +77,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void deletePermanently(Long id) {
+    public void deletePermanently(Integer id) {
         PublisherEntity entity = findByDeleteId(id);
         publisherRepository.delete(entity);
     }

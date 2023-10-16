@@ -13,4 +13,5 @@ public class PublisherDetailRequest extends PublisherResponseRequest {
 
     private OffsetDateTime updatedAt;
 
+
 }

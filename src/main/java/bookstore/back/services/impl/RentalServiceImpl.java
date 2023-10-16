@@ -32,30 +32,23 @@ public class RentalServiceImpl implements RentalService {
     private BookRepository bookRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private RentalMapper rentalMapper;
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private BookService bookService;
-
     @Override
     public void create(RentalCreateRequest request) {
         RentalEntity rental = new RentalEntity();
-        BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new NotFoundException("Livro", request.getBookId()));
-        Integer totalRented = book.getTotalTimesRented();
+        BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new NotFoundException("o livro", request.getBookId()));
+
         rental.setBook(book);
         rental.setUser(userService.findById(request.getUserId()));
-        rental.setDeadLine(request.getDeadLine());
+        rental.setDeadline(request.getDeadline());
         rental.setRentalDate(LocalDate.now());
         rentalValidation.validateForCreate(rental);
         rental.getBook().setAvailableQuantity(book.getAvailableQuantity());
-        book.setTotalTimesRented(totalRented + 1);
-        rental.setStatus(getStatus(rental.getDeadLine(), rental.getReturnDate()));
+        rental.setStatus(getStatus(rental.getDeadline(), rental.getReturnDate()));
         bookRepository.save(book);
         rentalRepository.save(rental);
     }
@@ -64,9 +57,9 @@ public class RentalServiceImpl implements RentalService {
     public void update(RentalUpdateRequest request) {
         RentalEntity entity = findByIdAndReturnDateIsNull(request.getId());
         if (entity.getStatus() == Status.PENDING_ON_TIME) {
-            entity.setDeadLine(request.getDeadLine());
+            entity.setDeadline(request.getDeadline());
             rentalValidation.validateUpdate(entity);
-            entity.setStatus(getStatus(entity.getDeadLine(), entity.getReturnDate()));
+            entity.setStatus(getStatus(entity.getDeadline(), entity.getReturnDate()));
             rentalRepository.save(entity);
         } else {
             throw new BusinessException("Você só pode renovar aluguéis com status PENDING_ON_TIME (Pendente e no prazo).");
@@ -100,23 +93,23 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public RentalEntity findById(Long id) {
+    public RentalEntity findById(Integer id) {
         return rentalRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Aluguel", id));
+                .orElseThrow(() -> new NotFoundException("o aluguel", id));
     }
 
-    private RentalEntity findByIdAndReturnDateIsNull(Long id) {
-        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new NotFoundException("Aluguel", id));
+    private RentalEntity findByIdAndReturnDateIsNull(Integer id) {
+        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new NotFoundException("o aluguel", id));
     }
 
 
-    private Status getStatus(LocalDate deadLine, LocalDate returnDate) {
+    private Status getStatus(LocalDate deadline, LocalDate returnDate) {
         LocalDate today = LocalDate.now();
-        if (returnDate == null && today.isBefore(deadLine) || returnDate == null && today.isEqual(deadLine)) {
+        if (returnDate == null && today.isBefore(deadline) || returnDate == null && today.isEqual(deadline)) {
             return Status.PENDING_ON_TIME;
-        } else if (returnDate == null && today.isAfter(deadLine)) {
+        } else if (returnDate == null && today.isAfter(deadline)) {
             return Status.PENDING_LATE;
-        } else if (returnDate != null && today.isBefore(deadLine) || returnDate != null && today.isEqual(deadLine)) {
+        } else if (returnDate != null && today.isBefore(deadline) || returnDate != null && today.isEqual(deadline)) {
             return Status.RETURNED_ON_TIME;
         } else {
             return Status.RETURNED_LATE;

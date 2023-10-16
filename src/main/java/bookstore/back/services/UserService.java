@@ -10,10 +10,17 @@ import java.util.List;
 public interface UserService {
     void create(UserCreateRequest request);
 
-    UserEntity findById(Long id);
+    UserEntity findById(Integer id);
+
+    UserEntity findByDeletedId(Integer id);
 
     List<UserResponseRequest> getAll();
+
+    List<UserResponseRequest> getAllDeleted();
+
     void update(UserUpdateRequest request);
 
-    void delete(Long id);
+    void delete(Integer id);
+
+    void permanentlyDelete(Integer id);
 }

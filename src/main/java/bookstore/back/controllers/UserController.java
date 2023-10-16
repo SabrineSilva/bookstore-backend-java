@@ -23,6 +23,7 @@ public class UserController implements UserControllerOpenApi {
     @Autowired
     private UserMapper userMapper;
 
+
     @Override
     @PostMapping
     public void create(@RequestBody UserCreateRequest request) {
@@ -37,9 +38,9 @@ public class UserController implements UserControllerOpenApi {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailRequest> findById(@PathVariable Long id) {
+    public ResponseEntity<UserDetailRequest> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(userMapper.toUserDetailRequest(userService.findById(id)), HttpStatus.OK);
-    }git push
+    }
 
     @Override
     @GetMapping
@@ -48,8 +49,20 @@ public class UserController implements UserControllerOpenApi {
     }
 
     @Override
+    @GetMapping("/deleted")
+    public ResponseEntity<List<UserResponseRequest>> getAllDeleted() {
+        return new ResponseEntity<>(userService.getAllDeleted(), HttpStatus.OK);
+    }
+
+    @Override
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Integer id) {
         userService.delete(id);
+    }
+
+    @Override
+    @DeleteMapping("/deleted/{id}")
+    public void permanentlyDelete(@PathVariable Integer id) {
+        userService.permanentlyDelete(id);
     }
 }

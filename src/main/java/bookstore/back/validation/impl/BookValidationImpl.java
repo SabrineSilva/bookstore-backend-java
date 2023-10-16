@@ -51,7 +51,7 @@ public class BookValidationImpl implements BookValidation {
     private void validationSameData(BookEntity book) {
         String name = book.getName();
         String author = book.getAuthor();
-        Long publisher = book.getPublisher().getId();
+        Integer publisher = book.getPublisher().getId();
 
         if (!bookRepository.findByName(name).isEmpty() && !bookRepository.findByAuthor(author).isEmpty() && !bookRepository.findByPublisherId(publisher).isEmpty()) {
             throw new BusinessException("Esse livro com o mesmo nome o mesmo autor já está cadastrado no sistema dentro dessa editora.");
@@ -62,7 +62,7 @@ public class BookValidationImpl implements BookValidation {
     private void validationSameDataUpdate(BookEntity book) {
         String name = book.getName();
         String author = book.getAuthor();
-        Long publisher = book.getPublisher().getId();
+        Integer publisher = book.getPublisher().getId();
 
         BookEntity existingBook = bookRepository.findBookByNameAndAuthorAndPublisherId(name, author, publisher).orElse(null);
         if (existingBook != null && !existingBook.getId().equals(book.getId())) {
@@ -133,7 +133,7 @@ public class BookValidationImpl implements BookValidation {
 
     }
 
-    private void validateRelationship(Long id) {
+    private void validateRelationship(Integer id) {
 
         List<Optional<RentalEntity>> rentals = rentalRepository.findByBookId(id);
 
@@ -143,7 +143,7 @@ public class BookValidationImpl implements BookValidation {
     }
 
     @Override
-    public void validateForDelete(Long id) {
+    public void validateForDelete(Integer id) {
         validateRelationship(id);
     }
 

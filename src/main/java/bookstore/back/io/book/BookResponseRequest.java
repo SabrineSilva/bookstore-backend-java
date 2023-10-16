@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookResponseRequest {
-    private Long id;
+    private Integer id;
     private String name;
     private String author;
     private Integer launchDate;

@@ -2,12 +2,8 @@ package bookstore.back.services.impl;
 
 import bookstore.back.entities.BookEntity;
 import bookstore.back.entities.RentalEntity;
-import bookstore.back.exception.BusinessException;
 import bookstore.back.exception.NotFoundException;
-import bookstore.back.io.book.BookCreateRequest;
-import bookstore.back.io.book.BookMapper;
-import bookstore.back.io.book.BookResponseRequest;
-import bookstore.back.io.book.BookUpdateRequest;
+import bookstore.back.io.book.*;
 import bookstore.back.repositories.BookRepository;
 import bookstore.back.repositories.RentalRepository;
 import bookstore.back.services.BookService;
@@ -88,22 +84,30 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public List<BookResponseRequest> getAllDeleted() {
-        return bookRepository.findAllByIsDeletedTrue().stream().map(bookMapper::toBookResponseRequest).collect(Collectors.toList());
+    public List<BookResponseDeletedRequest> getAllDeleted() {
+        return bookRepository.findAllByIsDeletedTrue().stream().map(bookMapper::toBookResponseDeletedRequest).collect(Collectors.toList());
     }
 
     @Override
-    public BookEntity findById(Long id) {
-        return bookRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new NotFoundException("Livro", id));
+    public BookEntity findById(Integer id) {
+        BookEntity book = bookRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new NotFoundException("o livro", id));
+        Integer totalRentedNow = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId()).size();
+        Integer totalTimesRented = rentalRepository.findByBookId(book.getId()).size();
+        Integer availableQuantity = book.getTotalQuantity() - totalRentedNow;
+
+        book.setAvailableQuantity(availableQuantity);
+        book.setTotalTimesRented(totalTimesRented);
+
+        return book;
     }
 
     @Override
-    public BookEntity findByDeleteId(Long id) {
-        return bookRepository.findByIdAndIsDeletedTrue(id).orElseThrow(() -> new NotFoundException("Livro deletado", id));
+    public BookEntity findByDeleteId(Integer id) {
+        return bookRepository.findByIdAndIsDeletedTrue(id).orElseThrow(() -> new NotFoundException("o livro deletado", id));
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         BookEntity entity = findById(id);
         bookValidation.validateForDelete(id);
         entity.setDeleted(true);
@@ -112,26 +116,27 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public void deletePermanently(Long id) {
+    public void deletePermanently(Integer id) {
         BookEntity entity = findByDeleteId(id);
         bookRepository.delete(entity);
     }
 
     public List<BookResponseRequest> getBooksWithAvailableQuantity() {
         List<BookEntity> books = bookRepository.findAllByIsDeletedFalse();
-        List<BookResponseRequest> booksWithAvailableQuantity = new ArrayList<>();
+        List<BookResponseRequest> calculatedBooks = new ArrayList<>();
 
         for (BookEntity book : books) {
             Integer totalRentedNow = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId()).size();
-            BookResponseRequest response = getBookResponseRequest(book, totalRentedNow);
+            Integer totalTimesRented = rentalRepository.findByBookId(book.getId()).size();
+            BookResponseRequest response = getBookResponseRequest(book, totalRentedNow, totalTimesRented);
 
-            booksWithAvailableQuantity.add(response);
+            calculatedBooks.add(response);
         }
 
-        return booksWithAvailableQuantity;
+        return calculatedBooks;
     }
 
-    private static BookResponseRequest getBookResponseRequest(BookEntity book, Integer totalRentedNow) {
+    private static BookResponseRequest getBookResponseRequest(BookEntity book, Integer totalRentedNow, Integer totalTimesRented) {
         Integer availableQuantity = book.getTotalQuantity() - totalRentedNow;
 
         BookResponseRequest response = new BookResponseRequest();
@@ -140,7 +145,7 @@ public class BookServiceImpl implements BookService {
         response.setAuthor(book.getAuthor());
         response.setLaunchDate(book.getLaunchDate());
         response.setTotalQuantity(book.getTotalQuantity());
-        response.setTotalTimesRented(book.getTotalTimesRented());
+        response.setTotalTimesRented(totalTimesRented);
         response.setPublisherName(book.getPublisher().getName());
         response.setAvailableQuantity(availableQuantity);
         return response;

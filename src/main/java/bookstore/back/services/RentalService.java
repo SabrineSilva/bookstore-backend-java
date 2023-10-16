@@ -21,5 +21,5 @@ public interface RentalService {
 
     List<RentalResponseRequest> getPending();
 
-    RentalEntity findById(Long id);
+    RentalEntity findById(Integer id);
 }

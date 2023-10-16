@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "books")
+@Table(name = "books_tb")
 public class BookEntity extends BaseEntity {
 
     @Column(name="name", nullable = false)
@@ -29,9 +29,6 @@ public class BookEntity extends BaseEntity {
     @Column(name="totalQuantity", nullable = false)
     private Integer totalQuantity;
 
-    @Column(name="is_deleted", nullable = false)
-    private boolean isDeleted;
-
     @Column(name="availableQuantity")
     private Integer availableQuantity;
 
@@ -44,6 +41,9 @@ public class BookEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="publisher_id", nullable = false)
     private PublisherEntity publisher;
+
+    @Column(name="is_deleted", nullable = false)
+    private boolean isDeleted;
 
 
 }

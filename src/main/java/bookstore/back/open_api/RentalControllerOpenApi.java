@@ -26,7 +26,7 @@ public interface RentalControllerOpenApi {
     void update(@RequestBody RentalUpdateRequest request);
 
     @GetMapping("/{id}")
-    ResponseEntity<RentalDetailRequest> findById(@PathVariable Long id);
+    ResponseEntity<RentalDetailRequest> findById(@PathVariable Integer id);
 
     @ApiOperation(value = "Return a rental")
     @ApiResponses(value = {

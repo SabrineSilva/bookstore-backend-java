@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="users")
+@Table(name="users_tb")
 public class UserEntity extends BaseEntity {
 
     @Column(name="name", nullable = false)
@@ -29,4 +29,7 @@ public class UserEntity extends BaseEntity {
 
     @Column(name="numberOfRentals")
     private Integer numberOfRentals;
+
+    @Column(name="is_deleted", nullable = false)
+    private boolean isDeleted;
 }

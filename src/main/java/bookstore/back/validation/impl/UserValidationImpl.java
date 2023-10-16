@@ -21,7 +21,7 @@ public class UserValidationImpl implements UserValidation {
     private UserRepository userRepository;
 
     @Override
-    public void validateForCreate(UserEntity user){
+    public void validateForCreate(UserEntity user) {
         validationName(user.getName());
         validationCity(user.getCity());
         validationEmail(user.getEmail());
@@ -29,7 +29,7 @@ public class UserValidationImpl implements UserValidation {
     }
 
     @Override
-    public void validateUpdate(UserEntity user){
+    public void validateUpdate(UserEntity user) {
         validationName(user.getName());
         validationCity(user.getCity());
         validationEmailUpdate(user);
@@ -57,32 +57,32 @@ public class UserValidationImpl implements UserValidation {
     }
 
     private void validationEmail(String email) {
-        if (email == null || email.isEmpty()){
+        if (email == null || email.isEmpty()) {
             throw new BusinessException("'E-mail' não pode ser nulo.");
         }
 
-        if (isValidEmailAddress(email)){
+        if (isValidEmailAddress(email)) {
             throw new BusinessException("Endereço de e-mail inválido.");
         }
 
-        if (userRepository.findUserByEmail(email).isPresent()){
+        if (userRepository.findUserByEmail(email).isPresent()) {
             throw new BusinessException("Já existe um usuário cadastrado com o mesmo e-mail");
         }
     }
 
     private void validationEmailUpdate(UserEntity user) {
         String email = user.getEmail();
-        if (email == null || email.isEmpty()){
+        if (email == null || email.isEmpty()) {
             throw new BusinessException("'E-mail' não pode ser nulo.");
         }
 
-        if (isValidEmailAddress(email)){
+        if (isValidEmailAddress(email)) {
             throw new BusinessException("Endereço de e-mail inválido.");
         }
 
         UserEntity existingUser = userRepository.findUserByEmail(email).orElse(null);
 
-        if (existingUser != null && !existingUser.getId().equals(user.getId())){
+        if (existingUser != null && !existingUser.getId().equals(user.getId())) {
             throw new BusinessException("Já existe um usuário cadastrado com o mesmo e-mail");
         }
     }
@@ -102,15 +102,15 @@ public class UserValidationImpl implements UserValidation {
     }
 
     @Override
-    public void validateForDelete(Long id) {
+    public void validateForDelete(Integer id) {
         validateRelationship(id);
     }
 
-    private void validateRelationship(Long id) {
+    private void validateRelationship(Integer id) {
         List<Optional<RentalEntity>> rentals = rentalRepository.findByUserId(id);
 
-        if (!rentals.isEmpty()){
-            throw new BusinessException("Não é possível deletar, pois, há um aluguel associado à esse usuário.");
+        if (!rentals.isEmpty()) {
+            throw new BusinessException("Não é possível deletar, pois, há pelo menos um aluguel associado à esse usuário.");
         }
     }
 }

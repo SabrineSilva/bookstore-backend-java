@@ -36,7 +36,7 @@ public class RentalController implements RentalControllerOpenApi {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<RentalDetailRequest> findById(@PathVariable Long id) {
+    public ResponseEntity<RentalDetailRequest> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(rentalMapper.toRentalDetailRequest(rentalService.findById(id)), HttpStatus.OK);
     }
 

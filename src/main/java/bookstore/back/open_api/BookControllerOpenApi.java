@@ -1,9 +1,6 @@
 package bookstore.back.open_api;
 
-import bookstore.back.io.book.BookCreateRequest;
-import bookstore.back.io.book.BookDetailRequest;
-import bookstore.back.io.book.BookResponseRequest;
-import bookstore.back.io.book.BookUpdateRequest;
+import bookstore.back.io.book.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -29,7 +26,7 @@ public interface BookControllerOpenApi {
     void update(@RequestBody BookUpdateRequest request);
 
     @GetMapping("/{id}")
-    ResponseEntity<BookDetailRequest> findById(@PathVariable Long id);
+    ResponseEntity<BookDetailRequest> findById(@PathVariable Integer id);
 
     @ApiOperation(value = "List all the books")
     @ApiResponses(value = {
@@ -43,19 +40,19 @@ public interface BookControllerOpenApi {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @GetMapping("/deleted")
-    ResponseEntity<List<BookResponseRequest>> getAllDeleted();
+    ResponseEntity<List<BookResponseDeletedRequest>> getAllDeleted();
 
     @ApiOperation(value = "Delete the book")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id);
+    void delete(@PathVariable Integer id);
 
     @ApiOperation(value = "Delete permanently the book")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @DeleteMapping("/deleted/{id}")
-    void deletePermanently(@PathVariable Long id);
+    void deletePermanently(@PathVariable Integer id);
 }

@@ -14,9 +14,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="publishers")
+@Table(name="publishers_tb")
 public class PublisherEntity extends BaseEntity  {
-
 
     @Column(name="name", unique = true, nullable = false)
     private String name;

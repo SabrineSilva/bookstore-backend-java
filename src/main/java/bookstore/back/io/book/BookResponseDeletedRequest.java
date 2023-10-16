@@ -5,10 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookCreateRequest {
+public class BookResponseDeletedRequest {
+    private Integer id;
     private String name;
     private String author;
     private Integer launchDate;
     private Integer totalQuantity;
-    private Integer publisherId;
+    private Integer totalTimesRented;
+    private String publisherName;
+
 }

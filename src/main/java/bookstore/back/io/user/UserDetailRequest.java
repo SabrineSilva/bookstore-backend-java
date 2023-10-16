@@ -12,4 +12,8 @@ public class UserDetailRequest extends UserResponseRequest {
     private OffsetDateTime createdAt;
 
     private OffsetDateTime updatedAt;
+
+    private Integer numberOfRentals;
+
+
 }

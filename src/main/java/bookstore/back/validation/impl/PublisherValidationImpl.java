@@ -34,11 +34,11 @@ public class PublisherValidationImpl implements PublisherValidation {
     }
 
     @Override
-    public void validateForDelete(Long id) {
+    public void validateForDelete(Integer id) {
         validateRelationship(id);
     }
 
-    private void validateRelationship(Long id){
+    private void validateRelationship(Integer id){
 
         List<Optional<BookEntity>> books = bookRepository.findByPublisherId(id);
 

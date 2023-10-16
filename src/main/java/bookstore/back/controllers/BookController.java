@@ -36,7 +36,7 @@ public class BookController implements BookControllerOpenApi {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookDetailRequest> findById(@PathVariable Long id) {
+    public ResponseEntity<BookDetailRequest> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(bookMapper.toBookDetailRequest(bookService.findById(id)), HttpStatus.OK);
     }
 
@@ -48,19 +48,19 @@ public class BookController implements BookControllerOpenApi {
 
     @Override
     @GetMapping("/deleted")
-    public ResponseEntity<List<BookResponseRequest>> getAllDeleted() {
+    public ResponseEntity<List<BookResponseDeletedRequest>> getAllDeleted() {
         return new ResponseEntity<>(bookService.getAllDeleted(), HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Integer id) {
         bookService.delete(id);
     }
 
     @Override
     @DeleteMapping("/deleted/{id}")
-    public void deletePermanently(@PathVariable Long id) {
+    public void deletePermanently(@PathVariable Integer id) {
         bookService.deletePermanently(id);
     }
 

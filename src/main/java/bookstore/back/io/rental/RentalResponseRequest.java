@@ -8,11 +8,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class RentalResponseRequest {
-    private Long id;
+    private Integer id;
     private String bookName;
     private String userName;
     private LocalDate rentalDate;
-    private LocalDate deadLine;
+    private LocalDate deadline;
     private LocalDate returnDate;
     private Status status;
 

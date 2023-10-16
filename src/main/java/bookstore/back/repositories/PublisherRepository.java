@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PublisherRepository extends JpaRepository<PublisherEntity, Long>{
+public interface PublisherRepository extends JpaRepository<PublisherEntity, Integer>{
     Optional<PublisherEntity> findPublisherByName(String name);
 
     List<PublisherEntity> findAllByIsDeletedFalse();
 
     List<PublisherEntity> findAllByIsDeletedTrue();
 
-    Optional<PublisherEntity> findByIdAndIsDeletedFalse(Long id);
+    Optional<PublisherEntity> findByIdAndIsDeletedFalse(Integer id);
 
-    Optional<PublisherEntity> findByIdAndIsDeletedTrue(Long id);
+    Optional<PublisherEntity> findByIdAndIsDeletedTrue(Integer id);
 
 
 }

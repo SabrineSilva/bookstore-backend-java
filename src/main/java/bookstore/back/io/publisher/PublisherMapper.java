@@ -19,6 +19,7 @@ public class PublisherMapper {
         response.setId(publisher.getId());
         response.setName(publisher.getName());
         response.setCity(publisher.getCity());
+
         response.setCreatedAt(publisher.getCreatedAt());
         response.setUpdatedAt(publisher.getUpdatedAt());
         return response;

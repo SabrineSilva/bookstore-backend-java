@@ -36,7 +36,7 @@ public class PublisherController implements PublisherControllerOpenApi {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<PublisherDetailRequest> findById(@PathVariable Long id) {
+    public ResponseEntity<PublisherDetailRequest> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(publisherMapper.toPublisherDetailRequest(publisherService.findById(id)), HttpStatus.OK);
     }
 
@@ -54,13 +54,13 @@ public class PublisherController implements PublisherControllerOpenApi {
 
     @Override
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Integer id){
         publisherService.delete(id);
     }
 
     @Override
     @DeleteMapping("/deleted/{id}")
-    public void deletePermanently(@PathVariable Long id){
+    public void deletePermanently(@PathVariable Integer id){
         publisherService.deletePermanently(id);
     }
 }

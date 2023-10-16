@@ -17,12 +17,12 @@ public interface PublisherService {
 
     List<PublisherResponseRequest> getAllDeleted();
 
-    PublisherEntity findById(Long id);
+    PublisherEntity findById(Integer id);
 
-    PublisherEntity findByDeleteId(Long id);
+    PublisherEntity findByDeleteId(Integer id);
 
 
-    void delete(Long id);
+    void delete(Integer id);
 
-    void deletePermanently(Long id);
+    void deletePermanently(Integer id);
 }

@@ -30,7 +30,7 @@ public interface UserControllerOpenApi {
     void update(@RequestBody UserUpdateRequest request);
 
     @GetMapping("/{id}")
-    ResponseEntity<UserDetailRequest> findById(@PathVariable Long id);
+    ResponseEntity<UserDetailRequest> findById(@PathVariable Integer id);
 
     @ApiOperation(value = "List all the users")
     @ApiResponses(value = {
@@ -39,10 +39,24 @@ public interface UserControllerOpenApi {
     @GetMapping
     ResponseEntity<List<UserResponseRequest>> getAll();
 
-    @ApiOperation(value = "Delete the publisher")
+    @ApiOperation(value = "List all the deleted users")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success method return")
+    })
+    @GetMapping
+    ResponseEntity<List<UserResponseRequest>> getAllDeleted();
+
+    @ApiOperation(value = "Delete the user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id);
+    void delete(@PathVariable Integer id);
+
+    @ApiOperation(value = "Delete permanently the user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success method return")
+    })
+    @DeleteMapping("/deleted/{id}")
+    void permanentlyDelete(@PathVariable Integer id);
 }

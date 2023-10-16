@@ -7,5 +7,5 @@ public interface PublisherValidation {
 
      void validateUpdate(PublisherEntity publisher);
 
-     void validateForDelete(Long id);
+     void validateForDelete(Integer id);
 }

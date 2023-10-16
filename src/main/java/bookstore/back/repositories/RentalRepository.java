@@ -8,20 +8,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RentalRepository extends JpaRepository<RentalEntity, Long> {
-    List<Optional<RentalEntity>> findByBookId(Long id);
+public interface RentalRepository extends JpaRepository<RentalEntity, Integer> {
+    List<Optional<RentalEntity>> findByBookId(Integer id);
 
-    List<Optional<RentalEntity>> findByUserId(Long id);
+    List<Optional<RentalEntity>> findByUserId(Integer id);
 
-    List<RentalEntity> findAllByBookIdAndReturnDateIsNull(Long id);
+    List<RentalEntity> findAllByBookIdAndReturnDateIsNull(Integer id);
 
-    List<RentalEntity> findAllByUserIdAndReturnDateIsNull(Long id);
 
     List<RentalEntity> findAllByReturnDateIsNotNull();
 
     List<RentalEntity> findAllByReturnDateIsNull();
 
-    Optional<RentalEntity> findByIdAndReturnDateIsNull(Long id);
+    Optional<RentalEntity> findByIdAndReturnDateIsNull(Integer id);
 
-    boolean existsByUserIdAndBookIdAndReturnDateIsNull(Long userId, Long bookId);
+    boolean existsByUserIdAndBookIdAndReturnDateIsNull(Integer userId, Integer bookId);
+
+    Integer countByUserIdAndReturnDateIsNull(Integer id);
 }

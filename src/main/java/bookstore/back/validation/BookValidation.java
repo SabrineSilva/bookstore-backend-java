@@ -7,5 +7,5 @@ public interface BookValidation {
 
     void validateUpdate(BookEntity entity);
 
-    void validateForDelete(Long id);
+    void validateForDelete(Integer id);
 }

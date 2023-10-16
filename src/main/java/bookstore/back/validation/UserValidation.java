@@ -8,5 +8,5 @@ public interface UserValidation {
 
     void validateUpdate(UserEntity user);
 
-    void validateForDelete(Long id);
+    void validateForDelete(Integer id);
 }

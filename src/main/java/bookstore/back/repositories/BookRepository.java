@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookRepository extends JpaRepository<BookEntity, Long> {
+public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
-    List<Optional<BookEntity>> findByPublisherId(Long id);
+    List<Optional<BookEntity>> findByPublisherId(Integer id);
 
-    Optional <BookEntity> findByIdAndIsDeletedFalse(Long id);
+    Optional <BookEntity> findByIdAndIsDeletedFalse(Integer id);
 
-    Optional <BookEntity> findByIdAndIsDeletedTrue(Long id);
+    Optional <BookEntity> findByIdAndIsDeletedTrue(Integer id);
 
-    Optional<BookEntity> findBookByNameAndAuthorAndPublisherId(String name, String author, Long publisherId);
+    Optional<BookEntity> findBookByNameAndAuthorAndPublisherId(String name, String author, Integer publisherId);
 
     List<BookEntity> findAllByIsDeletedFalse();
 

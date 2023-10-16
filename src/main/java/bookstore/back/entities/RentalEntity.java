@@ -14,14 +14,14 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="rentals")
+@Table(name="rentals_tb")
 public class RentalEntity extends BaseEntity {
 
     @Column(name = "rentalDate")
     private LocalDate rentalDate;
 
-    @Column(name = "deadLine", nullable = false)
-    private LocalDate deadLine;
+    @Column(name = "deadline", nullable = false)
+    private LocalDate deadline;
 
     @Column(name = "returnDate")
     private LocalDate returnDate;
