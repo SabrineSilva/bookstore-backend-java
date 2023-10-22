@@ -15,9 +15,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     List<Optional<BookEntity>> findByPublisherId(Integer id);
 
-    Optional <BookEntity> findByIdAndIsDeletedFalse(Integer id);
+    Optional<BookEntity> findByIdAndIsDeletedFalse(Integer id);
 
-    Optional <BookEntity> findByIdAndIsDeletedTrue(Integer id);
+    Optional<BookEntity> findByIdAndIsDeletedTrue(Integer id);
 
     Optional<BookEntity> findBookByNameAndAuthorAndPublisherId(String name, String author, Integer publisherId);
 
@@ -25,12 +25,5 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     List<BookEntity> findAllByIsDeletedTrue();
 
-    List<BookEntity> findByAuthor(String author);
-
-    List<BookEntity> findByName(String name);
-
-
-
-
-
+    List<BookEntity> findByNameAndAuthorAndPublisherId(String name, String author, Integer publisherId);
 }

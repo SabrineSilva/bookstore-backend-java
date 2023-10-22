@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException("o usuário", id));
 
-        Integer numberOfRentals = rentalRepository.countByUserIdAndReturnDateIsNull(id);
+        Integer numberOfRentals = rentalRepository.countByUserId(id);
         user.setNumberOfRentals(numberOfRentals);
 
         return user;

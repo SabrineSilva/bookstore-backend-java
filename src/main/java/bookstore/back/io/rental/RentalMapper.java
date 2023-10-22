@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Component
 public class RentalMapper {
 
-    public RentalResponseRequest toRentalResponseRequest(RentalEntity rental){
+    public RentalResponseRequest toRentalResponseRequest(RentalEntity rental) {
         RentalResponseRequest response = new RentalResponseRequest();
         response.setId(rental.getId());
         response.setRentalDate(rental.getRentalDate());
@@ -20,7 +20,7 @@ public class RentalMapper {
         return response;
     }
 
-    public RentalDetailRequest toRentalDetailRequest(RentalEntity rental){
+    public RentalDetailRequest toRentalDetailRequest(RentalEntity rental) {
         RentalDetailRequest response = new RentalDetailRequest();
         response.setId(rental.getId());
         response.setRentalDate(rental.getRentalDate());
@@ -40,10 +40,12 @@ public class RentalMapper {
             return Status.PENDING_ON_TIME;
         } else if (returnDate == null && today.isAfter(deadline)) {
             return Status.PENDING_LATE;
-        } else if (returnDate != null && today.isBefore(deadline) || returnDate != null && today.isEqual(deadline)) {
+        } else if (returnDate != null && returnDate.isBefore(deadline) || returnDate != null && returnDate.isEqual(deadline)) {
             return Status.RETURNED_ON_TIME;
-        } else {
+        } else if (returnDate != null && returnDate.isAfter(deadline)) {
             return Status.RETURNED_LATE;
+        } else {
+            return Status.ERROR;
         }
     }
 }

@@ -54,15 +54,16 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public void update(RentalUpdateRequest request) {
+    public void increaseDeadline(RentalUpdateRequest request) {
         RentalEntity entity = findByIdAndReturnDateIsNull(request.getId());
+        LocalDate existingDeadline = entity.getDeadline();
         if (entity.getStatus() == Status.PENDING_ON_TIME) {
             entity.setDeadline(request.getDeadline());
-            rentalValidation.validateUpdate(entity);
+            rentalValidation.validateUpdate(entity, existingDeadline);
             entity.setStatus(getStatus(entity.getDeadline(), entity.getReturnDate()));
             rentalRepository.save(entity);
         } else {
-            throw new BusinessException("Você só pode renovar aluguéis com status PENDING_ON_TIME (Pendente e no prazo).");
+            throw new BusinessException("Você só pode renovar aluguéis pendentes e no prazo).");
         }
     }
 

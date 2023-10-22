@@ -23,7 +23,7 @@ public interface RentalControllerOpenApi {
             @ApiResponse(code = 200, message = "Success method return")
     })
     @PutMapping
-    void update(@RequestBody RentalUpdateRequest request);
+    void increaseDeadline(@RequestBody RentalUpdateRequest request);
 
     @GetMapping("/{id}")
     ResponseEntity<RentalDetailRequest> findById(@PathVariable Integer id);

@@ -11,7 +11,7 @@ import java.util.List;
 public interface RentalService {
     void create(RentalCreateRequest request);
 
-    void update(RentalUpdateRequest request);
+    void increaseDeadline(RentalUpdateRequest request);
 
     void returnBook(RentalDevolution request);
 

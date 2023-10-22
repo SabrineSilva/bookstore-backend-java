@@ -25,4 +25,6 @@ public interface RentalRepository extends JpaRepository<RentalEntity, Integer> {
     boolean existsByUserIdAndBookIdAndReturnDateIsNull(Integer userId, Integer bookId);
 
     Integer countByUserIdAndReturnDateIsNull(Integer id);
+
+    Integer countByUserId(Integer id);
 }

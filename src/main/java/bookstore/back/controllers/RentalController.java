@@ -27,17 +27,12 @@ public class RentalController implements RentalControllerOpenApi {
         rentalService.create(request);
     }
 
+
     @Override
     @PutMapping
-    public void update(@RequestBody RentalUpdateRequest request) {
-        rentalService.update(request);
+    public void increaseDeadline(@RequestBody RentalUpdateRequest request) {
+        rentalService.increaseDeadline(request);
 
-    }
-
-    @Override
-    @GetMapping("/{id}")
-    public ResponseEntity<RentalDetailRequest> findById(@PathVariable Integer id) {
-        return new ResponseEntity<>(rentalMapper.toRentalDetailRequest(rentalService.findById(id)), HttpStatus.OK);
     }
 
     @Override
@@ -46,6 +41,11 @@ public class RentalController implements RentalControllerOpenApi {
         rentalService.returnBook(request);
     }
 
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<RentalDetailRequest> findById(@PathVariable Integer id) {
+        return new ResponseEntity<>(rentalMapper.toRentalDetailRequest(rentalService.findById(id)), HttpStatus.OK);
+    }
 
     @Override
     @GetMapping

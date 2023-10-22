@@ -37,16 +37,13 @@ public class RentalValidationImpl implements RentalValidation {
     }
 
     @Override
-    public void validateUpdate(RentalEntity rental) {
-        validationDeadLineUpdate(rental.getRentalDate(), rental.getDeadline());
+    public void validateUpdate(RentalEntity rental, LocalDate existingDeadline) {
+        validateDeadlineUpdate(rental.getDeadline(), existingDeadline);
     }
 
-
-    private void validationDeadLineUpdate(LocalDate rentalDate, LocalDate deadLine) {
-        LocalDate today = LocalDate.now();
-
-        if (deadLine.isBefore(rentalDate)  || deadLine.isBefore(today) ) {
-            throw new BusinessException("A data de previsão de devolução deve ser depois ou igual ao dia atual e depois da data que foi realizado o aluguel.");
+    private void validateDeadlineUpdate(LocalDate newDeadline, LocalDate existingDeadline) {
+        if (newDeadline.isBefore(existingDeadline)) {
+            throw new BusinessException("A data de previsão deve ser maior que a data de previsão existente.");
         }
     }
 
