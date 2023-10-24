@@ -63,4 +63,6 @@ public class PublisherController implements PublisherControllerOpenApi {
     public void deletePermanently(@PathVariable Integer id){
         publisherService.deletePermanently(id);
     }
+
+
 }

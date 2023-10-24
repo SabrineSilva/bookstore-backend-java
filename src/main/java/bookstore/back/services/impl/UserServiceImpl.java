@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findById(Integer id) {
         UserEntity user = userRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new NotFoundException("o usuário", id));
+                .orElseThrow(() -> new NotFoundException("usuário", id));
 
         Integer numberOfRentals = rentalRepository.countByUserId(id);
         user.setNumberOfRentals(numberOfRentals);
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByDeletedId(Integer id) {
         return userRepository.findByIdAndIsDeletedTrue(id)
-                .orElseThrow(() -> new NotFoundException("o usuário deletado", id));
+                .orElseThrow(() -> new NotFoundException("usuário deletado", id));
 
     }
 

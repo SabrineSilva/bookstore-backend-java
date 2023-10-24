@@ -2,13 +2,13 @@ package bookstore.back.services.impl;
 
 import bookstore.back.entities.BookEntity;
 import bookstore.back.entities.RentalEntity;
+import bookstore.back.entities.UserEntity;
 import bookstore.back.exception.NotFoundException;
 import bookstore.back.io.book.*;
 import bookstore.back.repositories.BookRepository;
 import bookstore.back.repositories.RentalRepository;
 import bookstore.back.services.BookService;
 import bookstore.back.services.PublisherService;
-
 import bookstore.back.validation.BookValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,7 +90,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity findById(Integer id) {
-        BookEntity book = bookRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new NotFoundException("o livro", id));
+        BookEntity book = bookRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException("livro", id));
         Integer totalRentedNow = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId()).size();
         Integer totalTimesRented = rentalRepository.findByBookId(book.getId()).size();
         Integer availableQuantity = book.getTotalQuantity() - totalRentedNow;

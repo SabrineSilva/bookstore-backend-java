@@ -37,10 +37,13 @@ public class RentalServiceImpl implements RentalService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BookService bookService;
+
     @Override
     public void create(RentalCreateRequest request) {
         RentalEntity rental = new RentalEntity();
-        BookEntity book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new NotFoundException("o livro", request.getBookId()));
+        BookEntity book = bookService.findById(request.getBookId());
 
         rental.setBook(book);
         rental.setUser(userService.findById(request.getUserId()));
@@ -96,11 +99,11 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public RentalEntity findById(Integer id) {
         return rentalRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("o aluguel", id));
+                .orElseThrow(() -> new NotFoundException("aluguel", id));
     }
 
     private RentalEntity findByIdAndReturnDateIsNull(Integer id) {
-        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new NotFoundException("o aluguel", id));
+        return rentalRepository.findByIdAndReturnDateIsNull(id).orElseThrow(() -> new NotFoundException("aluguel", id));
     }
 
 

@@ -37,7 +37,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public PublisherEntity findById(Integer id) {
         return publisherRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new NotFoundException("a editora", id));
+                .orElseThrow(() -> new NotFoundException("editora", id));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public PublisherEntity findByDeleteId(Integer id) {
         return publisherRepository.findByIdAndIsDeletedTrue(id)
-                .orElseThrow(() -> new NotFoundException("a editora", id));
+                .orElseThrow(() -> new NotFoundException("editora", id));
     }
 
     @Override

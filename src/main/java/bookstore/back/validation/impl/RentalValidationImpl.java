@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -19,20 +20,14 @@ public class RentalValidationImpl implements RentalValidation {
 
     @Override
     public void validateForCreate(RentalEntity rental) {
-        validationDeadLine(rental.getDeadline());
-        validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId());
-        validationBook(rental.getBook());
-    }
+        List<String> errors = new ArrayList<>();
 
-    private void validationBook(BookEntity entity) {
-        List<RentalEntity> currentRentals = rentalRepository.findAllByBookIdAndReturnDateIsNull(entity.getId());
-        int totalRentedNow = currentRentals.size();
-        entity.setAvailableQuantity(entity.getTotalQuantity() - totalRentedNow);
-        Integer availableQuantity = entity.getAvailableQuantity();
+        validationDeadLine(rental.getDeadline(), errors);
+        validateDuplicateRental(rental.getUser().getId(), rental.getBook().getId(), errors);
+        validationBook(rental.getBook(), errors);
 
-        if (availableQuantity < 1){
-
-            throw new BusinessException("O livro não possui exemplares disponíveis!");
+        if (!errors.isEmpty()) {
+            throw new BusinessException(String.join(" ", errors));
         }
     }
 
@@ -41,27 +36,37 @@ public class RentalValidationImpl implements RentalValidation {
         validateDeadlineUpdate(rental.getDeadline(), existingDeadline);
     }
 
+    private void validationBook(BookEntity entity, List<String> errors) {
+        List<RentalEntity> currentRentals = rentalRepository.findAllByBookIdAndReturnDateIsNull(entity.getId());
+        int totalRentedNow = currentRentals.size();
+        entity.setAvailableQuantity(entity.getTotalQuantity() - totalRentedNow);
+        Integer availableQuantity = entity.getAvailableQuantity();
+
+        if (availableQuantity < 1) {
+            errors.add("O livro não possui exemplares disponíveis.");
+        }
+    }
+
     private void validateDeadlineUpdate(LocalDate newDeadline, LocalDate existingDeadline) {
         if (newDeadline.isBefore(existingDeadline)) {
             throw new BusinessException("A data de previsão deve ser maior que a data de previsão existente.");
         }
     }
 
-    private void validationDeadLine(LocalDate deadLine) {
+    private void validationDeadLine(LocalDate deadLine, List<String> errors) {
         if (deadLine == null) {
-            throw new BusinessException("A data de previsão de devolução não pode estar vazia.");
-        }
-
-        LocalDate today = LocalDate.now();
-
-        if (deadLine.isBefore(today)){
-            throw new BusinessException("A data de previsão de devolução deve ser depois do dia atual.");
+            errors.add("A data de previsão de devolução não pode estar vazia.");
+        } else {
+            LocalDate today = LocalDate.now();
+            if (deadLine.isBefore(today)) {
+                errors.add("A data de previsão de devolução deve ser depois do dia atual.");
+            }
         }
     }
 
-    public void validateDuplicateRental(Integer userId, Integer bookId) {
+    public void validateDuplicateRental(Integer userId, Integer bookId, List<String> errors) {
         if (rentalRepository.existsByUserIdAndBookIdAndReturnDateIsNull(userId, bookId)) {
-            throw new BusinessException("O usuário já alugou este livro e ainda não o devolveu.");
+            errors.add("O usuário já alugou este livro e ainda não o devolveu.");
         }
     }
 }
