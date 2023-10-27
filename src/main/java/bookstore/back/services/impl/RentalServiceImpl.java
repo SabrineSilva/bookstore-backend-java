@@ -76,7 +76,7 @@ public class RentalServiceImpl implements RentalService {
         LocalDate today = LocalDate.now();
 
         entity.setReturnDate(today);
-
+        entity.setStatus(getStatus(entity.getDeadline(), entity.getReturnDate()));
         rentalRepository.save(entity);
     }
 
