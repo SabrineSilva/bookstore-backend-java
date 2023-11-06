@@ -118,7 +118,7 @@ public class BookValidationImpl implements BookValidation {
         String author = book.getAuthor();
         Integer publisherId = book.getPublisher().getId();
 
-        List<BookEntity> existingBooks = bookRepository.findByNameAndAuthorAndPublisherId(name, author, publisherId);
+        List<BookEntity> existingBooks = bookRepository.findByNameAndAuthorAndPublisherIdAndIsDeletedFalse(name, author, publisherId);
 
         if (!existingBooks.isEmpty()) {
             errors.add("Esse livro com o mesmo nome e autor já está cadastrado no sistema dentro dessa editora.");
@@ -130,7 +130,7 @@ public class BookValidationImpl implements BookValidation {
         String author = book.getAuthor();
         Integer publisher = book.getPublisher().getId();
 
-        BookEntity existingBook = bookRepository.findBookByNameAndAuthorAndPublisherId(name, author, publisher).orElse(null);
+        BookEntity existingBook = bookRepository.findBookByNameAndAuthorAndPublisherIdAndIsDeletedFalse(name, author, publisher).orElse(null);
         if (existingBook != null && !existingBook.getId().equals(book.getId())) {
             errors.add("Esse livro com o mesmo nome e o mesmo autor já está cadastrado no sistema dentro dessa editora.");
         }

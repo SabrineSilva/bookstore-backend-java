@@ -6,6 +6,11 @@ public class NotFoundException extends RuntimeException {
     }
 
     private static String createMessage(String entity, Integer id) {
-        return (id == null) ? "'ID' de " + entity + " não pode ser nulo." : "Não foi possível encontrar " + entity + " com o id: " + id;
+        if (id == null) {
+            throw new BusinessException("'ID' de " + entity + " não pode ser nulo.");
+        } else {
+            return "Não foi possível encontrar " + entity + " com o id: " + id;
+        }
     }
+
 }

@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name="publishers_tb")
 public class PublisherEntity extends BaseEntity  {
 
-    @Column(name="name", unique = true, nullable = false)
+    @Column(name="name", nullable = false)
     private String name;
 
     @Column(name="city", nullable = false)

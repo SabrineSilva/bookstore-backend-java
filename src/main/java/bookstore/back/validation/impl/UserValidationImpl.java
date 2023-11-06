@@ -76,7 +76,7 @@ public class UserValidationImpl implements UserValidation {
             errors.add("Endereço de e-mail inválido.");
         }
 
-        if (userRepository.findUserByEmail(email).isPresent()) {
+        if (!userRepository.findAllByEmailAndIsDeletedFalse(email).isEmpty()) {
             errors.add("Já existe um usuário cadastrado com o mesmo e-mail");
         }
     }
@@ -91,7 +91,7 @@ public class UserValidationImpl implements UserValidation {
             errors.add("Endereço de e-mail inválido.");
         }
 
-        UserEntity existingUser = userRepository.findUserByEmail(email).orElse(null);
+        UserEntity existingUser = userRepository.findUserByEmailAndIsDeletedFalse(email).orElse(null);
 
         if (existingUser != null && !existingUser.getId().equals(user.getId())) {
             errors.add("Já existe um usuário cadastrado com o mesmo e-mail");

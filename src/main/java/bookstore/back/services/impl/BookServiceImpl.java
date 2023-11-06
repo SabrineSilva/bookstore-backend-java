@@ -3,6 +3,7 @@ package bookstore.back.services.impl;
 import bookstore.back.entities.BookEntity;
 import bookstore.back.entities.RentalEntity;
 import bookstore.back.entities.UserEntity;
+import bookstore.back.exception.BusinessException;
 import bookstore.back.exception.NotFoundException;
 import bookstore.back.io.book.*;
 import bookstore.back.repositories.BookRepository;
@@ -91,7 +92,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookEntity findById(Integer id) {
         BookEntity book = bookRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new NotFoundException("livro", id));
+                .orElseThrow(() -> {
+                    throw new NotFoundException("livro", id);
+                });
+
         Integer totalRentedNow = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId()).size();
         Integer totalTimesRented = rentalRepository.findByBookId(book.getId()).size();
         Integer availableQuantity = book.getTotalQuantity() - totalRentedNow;
@@ -101,6 +105,7 @@ public class BookServiceImpl implements BookService {
 
         return book;
     }
+
 
     @Override
     public BookEntity findByDeleteId(Integer id) {

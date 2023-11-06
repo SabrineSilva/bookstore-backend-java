@@ -31,8 +31,9 @@ public class PublisherValidationImpl implements PublisherValidation {
             errors.add("'Nome' não pode ser nulo.");
         } else if (publisher.getName().length() > 50) {
             errors.add("Tamanho excedido no campo 'nome'. O máximo é de 50 caracteres.");
-        } else if (publisherRepository.findPublisherByName(publisher.getName()).isPresent()) {
+        } else if (publisherRepository.findPublisherByNameAndIsDeletedFalse(publisher.getName()).isPresent()) {
             errors.add("Já existe uma editora cadastrada com o mesmo nome.");
+            System.out.println(publisherRepository.findPublisherByNameAndIsDeletedFalse(publisher.getName()).get().getName());
         }
 
         if (!StringUtils.hasText(publisher.getCity())) {
@@ -61,7 +62,7 @@ public class PublisherValidationImpl implements PublisherValidation {
                 errors.add("Tamanho excedido no campo 'nome'. O máximo é de 50 caracteres.");
             }
 
-            PublisherEntity existingPublisher = publisherRepository.findPublisherByName(newName).orElse(null);
+            PublisherEntity existingPublisher = publisherRepository.findPublisherByNameAndIsDeletedFalse(newName).orElse(null);
 
             if (existingPublisher != null && !existingPublisher.getId().equals(publisher.getId())) {
                 errors.add("Já existe uma editora cadastrada com o mesmo nome.");

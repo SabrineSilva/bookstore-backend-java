@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface PublisherRepository extends JpaRepository<PublisherEntity, Integer>{
-    Optional<PublisherEntity> findPublisherByName(String name);
+    Optional<PublisherEntity> findPublisherByNameAndIsDeletedFalse(String name);
 
     List<PublisherEntity> findAllByIsDeletedFalse();
 

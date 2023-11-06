@@ -21,7 +21,7 @@ public class UserEntity extends BaseEntity {
     @Column(name="city", nullable = false)
     private String city;
 
-    @Column(name="email", unique = true, nullable = false)
+    @Column(name="email", nullable = false)
     private String email;
 
     @Column(name="address", nullable = false)
