@@ -58,12 +58,11 @@ public class BookServiceImpl implements BookService {
         entity.setAuthor(request.getAuthor());
         entity.setLaunchDate(request.getLaunchDate());
         entity.setTotalQuantity(request.getTotalQuantity());
-        updateAvailableQuantity(entity);
         entity.setPublisher(publisherService.findById(request.getPublisherId()));
 
         bookValidation.validateUpdate(entity);
+        updateAvailableQuantity(entity);
         bookRepository.save(entity);
-
 
     }
 

@@ -31,8 +31,9 @@ public class BookValidationImpl implements BookValidation {
     @Override
     public void validateForCreate(BookEntity book) {
         List<String> errors = new ArrayList<>();
+        String name = book.getName();
 
-        if (!StringUtils.hasText(book.getName())) {
+        if (!StringUtils.hasText(book.getName()) || name == null) {
             errors.add("'Nome' não pode ser nulo.");
         } else if (book.getName().length() > 50) {
             errors.add("Tamanho excedido no campo 'nome'. O máximo é de 50 caracteres.");
@@ -70,47 +71,49 @@ public class BookValidationImpl implements BookValidation {
     public void validateUpdate(BookEntity book) {
         List<String> errors = new ArrayList<>();
 
-        if (book == null) {
-            errors.add("Editora não pode ser nula.");
-        } else {
-            if (!StringUtils.hasText(book.getName())) {
-                errors.add("'Nome' não pode ser nulo.");
-            } else if (book.getName().length() > 50) {
-                errors.add("Tamanho excedido no campo 'nome'. O máximo é de 50 caracteres.");
-            }
 
-            if (!StringUtils.hasText(book.getAuthor())) {
-                errors.add("'Autor' não pode ser nulo.");
-            } else if (book.getAuthor().length() > 50) {
-                errors.add("Tamanho excedido no campo 'autor'. O máximo é de 50 caracteres.");
-            }
+        if (!StringUtils.hasText(book.getName())) {
+            errors.add("'Nome' não pode ser nulo.");
+        } else if (book.getName().length() > 50) {
+            errors.add("Tamanho excedido no campo 'nome'. O máximo é de 50 caracteres.");
+        }
 
-            if (book.getLaunchDate() != null) {
-                int currentYear = LocalDate.now().getYear();
-                if (book.getLaunchDate() < 1 || book.getLaunchDate() > currentYear) {
-                    errors.add("O ano de lançamento deve ser um valor válido, antes ou igual ao ano atual.");
-                }
-            }
+        if (!StringUtils.hasText(book.getAuthor())) {
+            errors.add("'Autor' não pode ser nulo.");
+        } else if (book.getAuthor().length() > 50) {
+            errors.add("Tamanho excedido no campo 'autor'. O máximo é de 50 caracteres.");
+        }
 
-            if (book.getTotalQuantity() != null) {
-                List<RentalEntity> currentRentals = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId());
-                int totalRentedNow = currentRentals.size();
-
-                if (book.getTotalQuantity() < 0) {
-                    errors.add("A quantidade deve ser um valor válido (Maior ou igual a 0).");
-                }
-
-                if (book.getTotalQuantity() < totalRentedNow) {
-                    errors.add("O livro tem " + totalRentedNow + " aluguéis ativos, portanto, a sua quantidade total é no mínimo " + totalRentedNow + ".");
-                }
-            }
-
-            validationSameDataUpdate(book, errors);
-
-            if (!errors.isEmpty()) {
-                throw new BusinessException(String.join(" ", errors));
+        if (book.getLaunchDate() != null) {
+            int currentYear = LocalDate.now().getYear();
+            if (book.getLaunchDate() < 1 || book.getLaunchDate() > currentYear) {
+                errors.add("O ano de lançamento deve ser um valor válido, antes ou igual ao ano atual.");
             }
         }
+
+        if (book.getTotalQuantity() == null) {
+            errors.add("A quantidade não pode ser nula.");
+        }
+
+        if (book.getTotalQuantity() != null) {
+            List<RentalEntity> currentRentals = rentalRepository.findAllByBookIdAndReturnDateIsNull(book.getId());
+            int totalRentedNow = currentRentals.size();
+
+            if (book.getTotalQuantity() < 0) {
+                errors.add("A quantidade deve ser um valor válido (Maior ou igual a 0).");
+            }
+
+            if (book.getTotalQuantity() < totalRentedNow) {
+                errors.add("O livro tem " + totalRentedNow + " aluguéis ativos, portanto, a sua quantidade total é no mínimo " + totalRentedNow + ".");
+            }
+        }
+
+        validationSameDataUpdate(book, errors);
+
+        if (!errors.isEmpty()) {
+            throw new BusinessException(String.join(" ", errors));
+        }
+
     }
 
     private void validationSameData(BookEntity book, List<String> errors) {

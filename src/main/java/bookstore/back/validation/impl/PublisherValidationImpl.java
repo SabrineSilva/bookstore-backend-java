@@ -68,8 +68,9 @@ public class PublisherValidationImpl implements PublisherValidation {
                 errors.add("Já existe uma editora cadastrada com o mesmo nome.");
             }
         }
-
-        if (StringUtils.hasText(publisher.getCity()) && publisher.getCity().length() > 50) {
+        if (!StringUtils.hasText(publisher.getCity())) {
+            errors.add("'Cidade' não pode ser nulo.");
+        } else if (publisher.getCity().length() > 50) {
             errors.add("Tamanho excedido no campo 'cidade'. O máximo é de 50 caracteres.");
         }
 
